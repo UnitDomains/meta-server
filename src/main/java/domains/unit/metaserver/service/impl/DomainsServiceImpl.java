@@ -44,24 +44,24 @@ public class DomainsServiceImpl implements DomainsService {
     }
 
     @Override
-    public Page<OwnerDomainName> getRegistrantDomainsPage(String address, int pageNo, int pageSize) {
-        return ownerDomainNameRepository.getRegistrantDomainsPage(address, pageNo, pageSize);
+    public Page<OwnerDomainName> getRegistrantDomainsPage(int networkId, String address, int pageNo, int pageSize) {
+        return ownerDomainNameRepository.getRegistrantDomainsPage(networkId, address, pageNo, pageSize);
 
 
     }
 
     @Override
-    public Page<OwnerDomainName> getControllerDomainsPage(String address, int pageNo, int pageSize) {
+    public Page<OwnerDomainName> getControllerDomainsPage(int networkId, String address, int pageNo, int pageSize) {
 
-        return ownerDomainNameRepository.getControllerDomainsPage(address, pageNo, pageSize);
+        return ownerDomainNameRepository.getControllerDomainsPage(networkId, address, pageNo, pageSize);
     }
 
     @Override
-    public List<OwnerDomainName> getReverseRecordDomains(String address) {
-        List<OwnerDomainName> list1 = ownerDomainNameRepository.getReverseRecordDomains(address);
+    public List<OwnerDomainName> getReverseRecordDomains(int networkId, String address) {
+        List<OwnerDomainName> list1 = ownerDomainNameRepository.getReverseRecordDomains(networkId, address);
 
         List<SubdomainRegistrarEventNewSubdomainRegistration> subdomainRegistrarEventNewSubdomainRegistrationList =
-                subdomainRegistrarEventNewSubdomainRegistrationService.getListByOwner(address);
+                subdomainRegistrarEventNewSubdomainRegistrationService.getListByOwner(networkId, address);
 
         if (subdomainRegistrarEventNewSubdomainRegistrationList != null && subdomainRegistrarEventNewSubdomainRegistrationList.size() > 0) {
             List<OwnerDomainName> list2 = new ArrayList<>();
@@ -107,10 +107,12 @@ public class DomainsServiceImpl implements DomainsService {
             if (subdomain != null) {
                 OwnSubDomainName ownSubDomainName = new OwnSubDomainName();
                 ownSubDomainName.setLabel(subdomain.getLabel());
+                ownSubDomainName.setNetworkId(subdomain.getNetworkId());
                 ownSubDomainName.setSubNodeLabel(subdomain.getSubNodeLabel());
                 ownSubDomainName.setSubDomain(subdomain.getSubDomain());
 
                 OwnSubDomainName resultOwnSubDomainName = new OwnSubDomainName();
+                resultOwnSubDomainName.setNetworkId(subdomain.getNetworkId());
                 OwnSubDomainName subname = getName(subdomain, resultOwnSubDomainName);
                 if (subname != null) {
                     ownSubDomainName.setName(subname.getName());
@@ -134,7 +136,7 @@ public class DomainsServiceImpl implements DomainsService {
 
 
         if (parent == null) {
-            OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(subdomain.getLabel());
+            OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(resultOwnSubDomainName.getNetworkId(), subdomain.getLabel());
 
             if (ownerDomainName != null) {
                 if (resultOwnSubDomainName.getName() != null)
@@ -158,9 +160,9 @@ public class DomainsServiceImpl implements DomainsService {
     }
 
     @Override
-    public Page<OwnSubDomainName> getSubdomainsPage(String label, Integer pageNo, Integer pageSize) {
+    public Page<OwnSubDomainName> getSubdomainsPage(int networkId, String label, Integer pageNo, Integer pageSize) {
         Page<SubdomainRegistrarEventNewSubdomainRegistration> subdomainRegistrarEventNewSubdomainRegistrationPage =
-                subdomainRegistrarEventNewSubdomainRegistrationService.getPage(label, pageNo, pageSize);
+                subdomainRegistrarEventNewSubdomainRegistrationService.getPage(networkId, label, pageNo, pageSize);
 
         return convertSubdomainRegistrarEventNewSubdomainRegistration2OwnSubDomainName(
                 subdomainRegistrarEventNewSubdomainRegistrationPage, pageNo, pageSize);

@@ -1,4 +1,4 @@
-package domains.unit.webserver.utility;
+package domains.unit.metaserver.utility;
 
 import java.util.Date;
 import java.util.List;

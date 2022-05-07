@@ -8,6 +8,8 @@ public class OwnerDomainName {
     int baseNodeIndex;
     String label;
 
+    private int networkId;
+
     public String getName() {
         return name;
     }
@@ -30,5 +32,13 @@ public class OwnerDomainName {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

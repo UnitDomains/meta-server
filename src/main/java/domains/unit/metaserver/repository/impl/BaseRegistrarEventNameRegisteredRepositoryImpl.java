@@ -23,9 +23,6 @@ public class BaseRegistrarEventNameRegisteredRepositoryImpl implements BaseRegis
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public BaseRegistrarEventNameRegistered getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("""
@@ -67,10 +64,10 @@ public class BaseRegistrarEventNameRegisteredRepositoryImpl implements BaseRegis
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<BaseRegistrarEventNameRegistered> getPageQuery(int pageNo, int pageSize) {
@@ -81,10 +78,10 @@ public class BaseRegistrarEventNameRegisteredRepositoryImpl implements BaseRegis
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<BaseRegistrarEventNameRegistered> getPage(int pageNo, int pageSize) {
@@ -103,6 +100,7 @@ public class BaseRegistrarEventNameRegisteredRepositoryImpl implements BaseRegis
         public BaseRegistrarEventNameRegistered mapRow(ResultSet rs, int rowNum) throws SQLException {
             BaseRegistrarEventNameRegistered baseRegistrarEventNameRegistered = new BaseRegistrarEventNameRegistered();
             baseRegistrarEventNameRegistered.setPkId(rs.getString("pk_id"));
+            baseRegistrarEventNameRegistered.setNetworkId(rs.getInt("network_id"));
             baseRegistrarEventNameRegistered.setId(rs.getString("id"));
             baseRegistrarEventNameRegistered.setOwner(rs.getString("owner"));
             baseRegistrarEventNameRegistered.setExpires(BigInteger.valueOf(rs.getLong("expires")));

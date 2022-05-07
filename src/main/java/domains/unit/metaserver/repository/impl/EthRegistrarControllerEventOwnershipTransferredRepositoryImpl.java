@@ -21,9 +21,6 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
     }
 
 
-    /**
-     * getCount
-     */
     @Override
     public int getCount() {
         return jdbcTemplate.queryForObject("""
@@ -34,10 +31,10 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<EthRegistrarControllerEventOwnershipTransferred> getPageQuery(int pageNo, int pageSize) {
@@ -48,10 +45,10 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int pageNo, int pageSize) {
@@ -72,6 +69,7 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
             EthRegistrarControllerEventOwnershipTransferred ethRegistrarControllerEventOwnershipTransferred =
                     new EthRegistrarControllerEventOwnershipTransferred();
             ethRegistrarControllerEventOwnershipTransferred.setPkId(rs.getString("pk_id"));
+            ethRegistrarControllerEventOwnershipTransferred.setNetworkId(rs.getInt("network_id"));
             ethRegistrarControllerEventOwnershipTransferred.setPreviousOwner(rs.getString("previousOwner"));
             ethRegistrarControllerEventOwnershipTransferred.setNewOwner(rs.getString("newOwner"));
             ethRegistrarControllerEventOwnershipTransferred.setTimestamp(rs.getDate("timestamp"));

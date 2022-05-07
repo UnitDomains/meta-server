@@ -7,7 +7,7 @@ import domains.unit.metaserver.model.metadata.MetaDataAttribute;
 import domains.unit.metaserver.repository.BaseRegistrarEventNameRegisteredRepository;
 import domains.unit.metaserver.repository.OwnerDomainNameRepository;
 import domains.unit.metaserver.service.MetadataService;
-import domains.unit.webserver.utility.ResponseEntityUtils;
+import domains.unit.metaserver.utility.ResponseEntityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -141,6 +141,34 @@ public class MetadataServiceImpl implements MetadataService {
         return image;
     }
 
+
+    private int getNetworkId(String networkName) {
+        switch (networkName) {
+            case "mainnet":
+            case "Mainnet":
+                return 1;
+            case "ropsten":
+            case "Ropsten":
+                return 3;
+            case "rinkeby":
+            case "Rinkeby":
+                return 4;
+        }
+        return 0;
+    }
+
+    private String getContractAddress(int networkId) {
+        switch (networkId) {
+            case 1:
+                return "";
+            case 3:
+                return "";
+            case 4:
+                return "0x91f4859da91F5935d5A7694202e218661c824A53";
+        }
+        return null;
+    }
+
     @Override
     public ResponseEntity<MetaData> getMetadata(String networkName, String contractAddress, String tokenId) {
 
@@ -149,15 +177,17 @@ public class MetadataServiceImpl implements MetadataService {
                 networkName.length() == 0 || contractAddress.length() == 0 || tokenId.length() == 0)
             return ResponseEntityUtils.badRequest(null, "null object");
 
+        int networkId = getNetworkId(networkName);
 
-        if (!networkName.equals("mainnet") && !networkName.equals("rinkeby"))
+
+        if (networkId <= 0)
             return ResponseEntityUtils.badRequest(null, "error network name");
 
-        if (!contractAddress.equals("0x91f4859da91F5935d5A7694202e218661c824A53"))
+        if (!contractAddress.equals(getContractAddress(networkId)))
             return ResponseEntityUtils.badRequest(null, "error contract address");
 
 
-        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(tokenId);
+        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId, tokenId);
 
         if (ownerDomainName == null)
             return ResponseEntityUtils.badRequest(null, "error value of tokenId");
@@ -228,14 +258,16 @@ public class MetadataServiceImpl implements MetadataService {
             return ResponseEntityUtils.badRequest(null, "null object");
 
 
-        if (!networkName.equals("mainnet") && !networkName.equals("rinkeby"))
+        int networkId = getNetworkId(networkName);
+
+
+        if (networkId <= 0)
             return ResponseEntityUtils.badRequest(null, "error network name");
 
-        if (!contractAddress.equals("0x91A04e5Cc77e36400BfD48eC5C7c64162619e9c8"))
+        if (!contractAddress.equals(getContractAddress(networkId)))
             return ResponseEntityUtils.badRequest(null, "error contract address");
 
-
-        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(tokenId);
+        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId, tokenId);
 
         if (ownerDomainName == null)
             return ResponseEntityUtils.badRequest(null, "error value of tokenId");

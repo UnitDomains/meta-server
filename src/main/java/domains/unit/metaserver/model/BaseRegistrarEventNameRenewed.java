@@ -8,6 +8,8 @@ import java.util.Date;
 @Component
 public class BaseRegistrarEventNameRenewed {
     private String pkId;//pk_id,主键
+
+    private int networkId;
     private String id;//id
     private BigInteger expires;//expires
     private Date timestamp;//timestamp
@@ -52,5 +54,13 @@ public class BaseRegistrarEventNameRenewed {
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

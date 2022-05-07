@@ -11,6 +11,8 @@ public class OwnSubDomainName {
 
     int baseNodeIndex;
 
+    private int networkId;
+
     public String getName() {
         return name;
     }
@@ -49,5 +51,13 @@ public class OwnSubDomainName {
 
     public void setBaseNodeIndex(int baseNodeIndex) {
         this.baseNodeIndex = baseNodeIndex;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

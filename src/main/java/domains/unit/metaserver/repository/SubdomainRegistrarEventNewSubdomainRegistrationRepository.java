@@ -15,8 +15,8 @@ public interface SubdomainRegistrarEventNewSubdomainRegistrationRepository {
 
     SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(String subNodeLabel);
 
-    Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(String label, int pageNo, int pageSize);
+    Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId, String label, int pageNo, int pageSize);
 
-    List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(String owner);
+    List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId, String owner);
 
 }

@@ -2,12 +2,13 @@ package domains.unit.metaserver.model;
 
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 @Component
 public class BaseRegistrarEventTransfer {
     private String pkId;//pk_id,主键
+
+    private int networkId;
     private String fromAddr;//from_addr
     private String toAddr;//to_addr
     private String tokenId;//tokenId
@@ -61,5 +62,13 @@ public class BaseRegistrarEventTransfer {
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

@@ -22,9 +22,6 @@ public class BaseRegistrarEventNameRenewedRepositoryImpl implements BaseRegistra
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public BaseRegistrarEventNameRenewed getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("select count(*) from base_registrar_event_name_renewed WHERE pk_id=?",
@@ -44,10 +41,10 @@ public class BaseRegistrarEventNameRenewedRepositoryImpl implements BaseRegistra
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<BaseRegistrarEventNameRenewed> getPageQuery(int pageNo, int pageSize) {
@@ -58,10 +55,10 @@ public class BaseRegistrarEventNameRenewedRepositoryImpl implements BaseRegistra
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<BaseRegistrarEventNameRenewed> getPage(int pageNo, int pageSize) {
@@ -80,6 +77,7 @@ public class BaseRegistrarEventNameRenewedRepositoryImpl implements BaseRegistra
         public BaseRegistrarEventNameRenewed mapRow(ResultSet rs, int rowNum) throws SQLException {
             BaseRegistrarEventNameRenewed baseRegistrarEventNameRenewed = new BaseRegistrarEventNameRenewed();
             baseRegistrarEventNameRenewed.setPkId(rs.getString("pk_id"));
+            baseRegistrarEventNameRenewed.setNetworkId(rs.getInt("network_id"));
             baseRegistrarEventNameRenewed.setId(rs.getString("id"));
             baseRegistrarEventNameRenewed.setExpires(BigInteger.valueOf(rs.getLong("expires")));
             baseRegistrarEventNameRenewed.setTimestamp(rs.getDate("timestamp"));

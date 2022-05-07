@@ -21,111 +21,112 @@ public class OwnerDomainNameRepositoryImpl implements OwnerDomainNameRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private int getRegistrantDomainsCount(String address) {
+    private int getRegistrantDomainsCount(int networkId, String address) {
         return jdbcTemplate.queryForObject("""
-                        select count(*)
-                        from base_registrar_event_transfer as A 
-                        join  eth_registrar_controller_event_name_registered as B
-                        on A.tokenId=B.label
-                        where A.to_addr=?
+                        SELECT count(*)
+                        FROM base_registrar_event_transfer AS A 
+                        JOIN  eth_registrar_controller_event_name_registered AS B
+                        ON A.tokenId=B.label
+                        where A.network_id=? AND B.network_id=? AND A.to_addr=?
                         """,
-                new Object[]{address},
-                new int[]{Types.CHAR},
+                new Object[]{networkId, networkId, address},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.CHAR},
                 Integer.class);
     }
 
-    private List<OwnerDomainName> getRegistrantDomainsPageQuery(String address, int pageNo, int pageSize) {
+    private List<OwnerDomainName> getRegistrantDomainsPageQuery(int networkId, String address, int pageNo, int pageSize) {
         return jdbcTemplate.query("""
-                        select B.name,B.label,B.baseNodeIndex
-                        from base_registrar_event_transfer as A 
-                        join eth_registrar_controller_event_name_registered as B
-                        on A.tokenId=B.label
-                        where A.to_addr=?
+                        SELECT B.name,B.label,B.baseNodeIndex,B.network_id
+                        FROM base_registrar_event_transfer AS A 
+                        JOIN eth_registrar_controller_event_name_registered AS B
+                        ON A.tokenId=B.label
+                        where A.network_id=? AND B.network_id=? AND A.to_addr=?
                         limit ?,?
                         """,
-                new Object[]{address, pageNo * pageSize, pageSize},
-                new int[]{Types.CHAR, Types.INTEGER, Types.INTEGER},
+                new Object[]{networkId, networkId, address, pageNo * pageSize, pageSize},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.CHAR, Types.INTEGER, Types.INTEGER},
                 new OwnerDomainNameMapper());
     }
 
     @Override
-    public Page<OwnerDomainName> getRegistrantDomainsPage(String address, int pageNo, int pageSize) {
+    public Page<OwnerDomainName> getRegistrantDomainsPage(int networkId, String address, int pageNo, int pageSize) {
 
-        long totalCount = getRegistrantDomainsCount(address);
+        long totalCount = getRegistrantDomainsCount(networkId, address);
         if (totalCount < 1) return new Page<>();
         int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<OwnerDomainName> resultData = getRegistrantDomainsPageQuery(address, pageNo - 1, pageSize);
+        List<OwnerDomainName> resultData = getRegistrantDomainsPageQuery(networkId, address, pageNo - 1, pageSize);
         return new Page<>(0, totalCount, (int) totalCount, resultData);
     }
 
 
-    private int getControllerDomainsCount(String address) {
+    private int getControllerDomainsCount(int networkId, String address) {
         return jdbcTemplate.queryForObject("""
-                        select count(*)
-                        from ens_registry_event_transfer as A 
-                        join  eth_registrar_controller_event_name_registered as B
-                        on A.node=B.label
-                        where A.owner=?
+                        SELECT count(*)
+                        FROM ens_registry_event_transfer AS A 
+                        JOIN  eth_registrar_controller_event_name_registered AS B
+                        ON A.node=B.label
+                        where  A.network_id=? AND B.network_id=? AND A.owner=?
                         """,
-                new Object[]{address},
-                new int[]{Types.CHAR},
+                new Object[]{networkId, networkId, address},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.CHAR},
                 Integer.class);
     }
 
-    private List<OwnerDomainName> getControllerDomainsPageQuery(String address, int pageNo, int pageSize) {
+    private List<OwnerDomainName> getControllerDomainsPageQuery(int networkId, String address, int pageNo, int pageSize) {
         return jdbcTemplate.query("""
-                        select B.name,B.label,B.baseNodeIndex
-                        from ens_registry_event_transfer as A 
-                        join eth_registrar_controller_event_name_registered as B
-                        on A.node=B.label
-                        where A.owner=?
+                        SELECT B.name,B.label,B.baseNodeIndex,B.network_id
+                        FROM ens_registry_event_transfer AS A 
+                        JOIN eth_registrar_controller_event_name_registered AS B
+                        ON A.node=B.label
+                        where A.network_id=? AND B.network_id=? AND A.owner=?
                         limit ?,?
                         """,
-                new Object[]{address, pageNo * pageSize, pageSize},
-                new int[]{Types.CHAR, Types.INTEGER, Types.INTEGER},
+                new Object[]{networkId, networkId, address, pageNo * pageSize, pageSize},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.CHAR, Types.INTEGER, Types.INTEGER},
                 new OwnerDomainNameMapper());
     }
 
     @Override
-    public Page<OwnerDomainName> getControllerDomainsPage(String address, int pageNo, int pageSize) {
-        long totalCount = getControllerDomainsCount(address);
+    public Page<OwnerDomainName> getControllerDomainsPage(int networkId, String address, int pageNo, int pageSize) {
+        long totalCount = getControllerDomainsCount(networkId, address);
         if (totalCount < 1) return new Page<>();
         int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<OwnerDomainName> resultData = getControllerDomainsPageQuery(address, pageNo - 1, pageSize);
+        List<OwnerDomainName> resultData = getControllerDomainsPageQuery(networkId, address, pageNo - 1, pageSize);
         return new Page<>(0, totalCount, (int) totalCount, resultData);
     }
 
     @Override
-    public List<OwnerDomainName> getReverseRecordDomains(String address) {
+    public List<OwnerDomainName> getReverseRecordDomains(int networkId, String address) {
         return jdbcTemplate.query("""
-                        select B.name,B.label,B.baseNodeIndex
-                        from public_resolver_event_addr_changed as A 
-                        join eth_registrar_controller_event_name_registered as B
-                        on A.node=B.label
-                        where A.addr=?                 
+                        SELECT B.name,B.label,B.baseNodeIndex,B.network_id
+                        FROM public_resolver_event_addr_changed AS A 
+                        JOIN eth_registrar_controller_event_name_registered AS B
+                        ON A.node=B.label
+                        where A.network_id=? AND B.network_id=? AND A.addr=?                 
                         """,
-                new Object[]{address},
-                new int[]{Types.CHAR},
+                new Object[]{networkId, networkId, address},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.CHAR},
                 new OwnerDomainNameMapper());
     }
 
     @Override
-    public OwnerDomainName getOwnerDomainNameByLabel(String label) {
+    public OwnerDomainName getOwnerDomainNameByLabel(int networkId, String label) {
         if (jdbcTemplate.queryForObject("""
-                        select count(*) 
-                        from eth_registrar_controller_event_name_registered 
-                        WHERE label=?
+                        SELECT COUNT (*) 
+                        FROM eth_registrar_controller_event_name_registered 
+                        WHERE network_id=? AND label=?
                         """,
-                new Object[]{label},
-                new int[]{Types.CHAR}, Integer.class) == 0)
+                new Object[]{networkId, label},
+                new int[]{Types.INTEGER, Types.CHAR}, Integer.class) == 0)
             return null;
 
         return jdbcTemplate.queryForObject("""
-                        select name,label,baseNodeIndex 
-                        from eth_registrar_controller_event_name_registered 
-                        WHERE label=?
-                        """, new Object[]{label},
-                new int[]{Types.CHAR},
+                        SELECT name,label,baseNodeIndex,network_id 
+                        FROM eth_registrar_controller_event_name_registered 
+                        WHERE network_id=? AND label=?
+                        """,
+                new Object[]{networkId, label},
+                new int[]{Types.INTEGER, Types.CHAR},
                 new OwnerDomainNameMapper());
 
     }
@@ -139,7 +140,9 @@ public class OwnerDomainNameRepositoryImpl implements OwnerDomainNameRepository 
             OwnerDomainName ownerDomainName = new OwnerDomainName();
             ownerDomainName.setName(rs.getString("name"));
             ownerDomainName.setBaseNodeIndex(rs.getInt("baseNodeIndex"));
+            ownerDomainName.setNetworkId(rs.getInt("network_id"));
             ownerDomainName.setLabel(rs.getString("label"));
+            ownerDomainName.setNetworkId(rs.getInt("network_id"));
 
             return ownerDomainName;
         }

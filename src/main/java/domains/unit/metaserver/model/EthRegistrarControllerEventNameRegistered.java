@@ -8,6 +8,8 @@ import java.util.Date;
 @Component
 public class EthRegistrarControllerEventNameRegistered {
     private String pkId;//pk_id,主键
+
+    private int networkId;
     private String name;//name
     private String label;//label
     private String owner;//owner
@@ -81,11 +83,20 @@ public class EthRegistrarControllerEventNameRegistered {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
+
     public Date getOpTime() {
         return opTime;
     }
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

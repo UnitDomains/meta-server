@@ -26,7 +26,7 @@ public class EthRegistrarControllerEventOwnershipTransferredServiceImpl implemen
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
      * @param pageNo   页号，从1开始
      * @param pageSize 每页的记录数

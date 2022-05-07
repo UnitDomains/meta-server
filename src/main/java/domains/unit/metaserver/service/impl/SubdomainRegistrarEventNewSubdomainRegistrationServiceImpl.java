@@ -50,17 +50,18 @@ public class SubdomainRegistrarEventNewSubdomainRegistrationServiceImpl implemen
     /**
      * 获得指定页面数据
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param networkId
+     * @param pageNo    页号，从1开始
+     * @param pageSize  每页的记录数
      */
     @Override
-    public Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(String label, int pageNo, int pageSize) {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getPage(label, pageNo, pageSize);
+    public Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId, String label, int pageNo, int pageSize) {
+        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getPage(networkId, label, pageNo, pageSize);
     }
 
     @Override
-    public List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(String owner) {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getListByOwner(owner);
+    public List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId, String owner) {
+        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getListByOwner(networkId, owner);
     }
 
 }

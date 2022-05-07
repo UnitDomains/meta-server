@@ -23,9 +23,6 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public EthRegistrarControllerEventNameRegistered getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("""
@@ -45,9 +42,7 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
                 new EthRegistrarControllerEventNameRegisteredMapper());
     }
 
-    /**
-     * getCount
-     */
+
     @Override
     public int getCount() {
         return jdbcTemplate.queryForObject("""
@@ -58,10 +53,10 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<EthRegistrarControllerEventNameRegistered> getPageQuery(int pageNo, int pageSize) {
@@ -72,10 +67,10 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<EthRegistrarControllerEventNameRegistered> getPage(int pageNo, int pageSize) {
@@ -96,6 +91,7 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
             EthRegistrarControllerEventNameRegistered ethRegistrarControllerEventNameRegistered =
                     new EthRegistrarControllerEventNameRegistered();
             ethRegistrarControllerEventNameRegistered.setPkId(rs.getString("pk_id"));
+            ethRegistrarControllerEventNameRegistered.setNetworkId(rs.getInt("network_id"));
             ethRegistrarControllerEventNameRegistered.setLabel(rs.getString("label"));
             ethRegistrarControllerEventNameRegistered.setOwner(rs.getString("owner"));
             ethRegistrarControllerEventNameRegistered.setCost(BigInteger.valueOf(rs.getLong("cost")));

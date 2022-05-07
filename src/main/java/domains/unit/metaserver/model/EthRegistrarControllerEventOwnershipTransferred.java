@@ -2,12 +2,13 @@ package domains.unit.metaserver.model;
 
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 @Component
 public class EthRegistrarControllerEventOwnershipTransferred {
     private String pkId;//pk_id
+
+    private int networkId;
     private String previousOwner;//previousOwner
     private String newOwner;//newOwner
     private Date timestamp;//timestamp
@@ -52,5 +53,13 @@ public class EthRegistrarControllerEventOwnershipTransferred {
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

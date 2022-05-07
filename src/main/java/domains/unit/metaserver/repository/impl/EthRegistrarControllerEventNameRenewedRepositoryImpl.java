@@ -22,9 +22,6 @@ public class EthRegistrarControllerEventNameRenewedRepositoryImpl implements Eth
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public EthRegistrarControllerEventNameRenewed getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("""
@@ -52,10 +49,10 @@ public class EthRegistrarControllerEventNameRenewedRepositoryImpl implements Eth
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<EthRegistrarControllerEventNameRenewed> getPageQuery(int pageNo, int pageSize) {
@@ -66,10 +63,10 @@ public class EthRegistrarControllerEventNameRenewedRepositoryImpl implements Eth
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<EthRegistrarControllerEventNameRenewed> getPage(int pageNo, int pageSize) {
@@ -90,6 +87,7 @@ public class EthRegistrarControllerEventNameRenewedRepositoryImpl implements Eth
             EthRegistrarControllerEventNameRenewed ethRegistrarControllerEventNameRenewed =
                     new EthRegistrarControllerEventNameRenewed();
             ethRegistrarControllerEventNameRenewed.setPkId(rs.getString("pk_id"));
+            ethRegistrarControllerEventNameRenewed.setNetworkId(rs.getInt("network_id"));
             ethRegistrarControllerEventNameRenewed.setLabel(rs.getString("label"));
             ethRegistrarControllerEventNameRenewed.setCost(BigInteger.valueOf(rs.getLong("cost")));
             ethRegistrarControllerEventNameRenewed.setExpires(BigInteger.valueOf(rs.getLong("expires")));

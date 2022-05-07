@@ -6,7 +6,7 @@ import domains.unit.metaserver.model.SubdomainRegistrarEventNewSubdomainRegistra
 import java.util.List;
 
 public interface SubdomainRegistrarEventNewSubdomainRegistrationService {
-  
+
 
     int getCount();
 
@@ -16,8 +16,8 @@ public interface SubdomainRegistrarEventNewSubdomainRegistrationService {
 
     SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(String subNodeLabel);
 
-    Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(String label, int pageNo, int pageSize);
+    Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId, String label, int pageNo, int pageSize);
 
-    List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(String owner);
+    List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId, String owner);
 
 }

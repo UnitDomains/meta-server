@@ -7,11 +7,11 @@ import domains.unit.metaserver.model.Page;
 import java.util.List;
 
 public interface DomainsService {
-    Page<OwnerDomainName> getRegistrantDomainsPage(String address, int pageNo, int pageSize);
+    Page<OwnerDomainName> getRegistrantDomainsPage(int networkId, String address, int pageNo, int pageSize);
 
-    Page<OwnerDomainName> getControllerDomainsPage(String address, int pageNo, int pageSize);
+    Page<OwnerDomainName> getControllerDomainsPage(int networkId, String address, int pageNo, int pageSize);
 
-    List<OwnerDomainName> getReverseRecordDomains(String address);
+    List<OwnerDomainName> getReverseRecordDomains(int networkId, String address);
 
-    Page<OwnSubDomainName> getSubdomainsPage(String label, Integer pageNo, Integer pageSize);
+    Page<OwnSubDomainName> getSubdomainsPage(int networkId, String label, Integer pageNo, Integer pageSize);
 }

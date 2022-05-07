@@ -2,12 +2,13 @@ package domains.unit.metaserver.model;
 
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 @Component
 public class EnsRegistryEventNewOwner {
     private String pkId;//pk_id,主键
+
+    private int networkId;
     private String node;//node
     private String label;//label
     private String owner;//owner
@@ -61,5 +62,13 @@ public class EnsRegistryEventNewOwner {
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

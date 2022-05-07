@@ -1,32 +1,13 @@
-package domains.unit.webserver.utility;
+package domains.unit.metaserver.utility;
 
 import java.security.MessageDigest;
 
 
-/**
- * 摘要
- */
 public class EncoderHandler {
 
-    private final static String SALT="BLOCKCHAINPROJECT";
-
-    public enum ALGORITHM {
-        MD5("MD5"), SHA_1("SHA-1"), SHA_256("SHA-256"), SHA_384("SHA-384"), SHA_512("SHA-512");
-        private String algorithmName;
-
-        private ALGORITHM(String algorithmName) {
-            this.algorithmName = algorithmName;
-        }
-
-        public String getAlgorithmName() {
-            return algorithmName;
-        }
-    }
-
-
+    private final static String SALT = "BLOCKCHAINPROJECT";
     private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5',
             '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
 
     private static String byteToArrayString(byte bByte) {
         int iRet = bByte;
@@ -38,9 +19,8 @@ public class EncoderHandler {
         int iD2 = iRet % 16;
 
 
-        return String.valueOf(HEX_DIGITS[iD1]) + String.valueOf(HEX_DIGITS[iD2]);
+        return String.valueOf(HEX_DIGITS[iD1]) + HEX_DIGITS[iD2];
     }
-
 
     private static String byteToString(byte[] bByte) {
         StringBuffer sBuffer = new StringBuffer();
@@ -62,9 +42,23 @@ public class EncoderHandler {
             throw new RuntimeException(e);
         }
     }
+
     public static String encode(String str) {
-        str="CRYPTO"+str+SALT;
+        str = "CRYPTO" + str + SALT;
         return encode(str, ALGORITHM.SHA_512);
+    }
+
+    public enum ALGORITHM {
+        MD5("MD5"), SHA_1("SHA-1"), SHA_256("SHA-256"), SHA_384("SHA-384"), SHA_512("SHA-512");
+        private final String algorithmName;
+
+        ALGORITHM(String algorithmName) {
+            this.algorithmName = algorithmName;
+        }
+
+        public String getAlgorithmName() {
+            return algorithmName;
+        }
     }
 
 

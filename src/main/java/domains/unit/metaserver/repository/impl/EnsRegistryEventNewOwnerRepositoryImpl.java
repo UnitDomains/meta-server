@@ -21,9 +21,6 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public EnsRegistryEventNewOwner getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("select count(*) from ens_registry_event_new_owner WHERE pk_id=?",
@@ -47,11 +44,10 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param address
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<EnsRegistryEventNewOwner> getPageQuery(String address, int pageNo, int pageSize) {
@@ -62,11 +58,10 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param address
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<EnsRegistryEventNewOwner> getPage(String address, int pageNo, int pageSize) {
@@ -85,6 +80,7 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
         public EnsRegistryEventNewOwner mapRow(ResultSet rs, int rowNum) throws SQLException {
             EnsRegistryEventNewOwner ensRegistryEventNewOwner = new EnsRegistryEventNewOwner();
             ensRegistryEventNewOwner.setPkId(rs.getString("pk_id"));
+            ensRegistryEventNewOwner.setNetworkId(rs.getInt("network_id"));
             ensRegistryEventNewOwner.setNode(rs.getString("node"));
             ensRegistryEventNewOwner.setLabel(rs.getString("label"));
             ensRegistryEventNewOwner.setOwner(rs.getString("owner"));

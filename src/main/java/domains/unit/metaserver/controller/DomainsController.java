@@ -22,30 +22,33 @@ public class DomainsController {
 
 
     @GetMapping("controller")
-    public Page<OwnerDomainName> getControllerDomainsPage(@RequestParam(value = "address", required = true) String address,
+    public Page<OwnerDomainName> getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
+                                                          @RequestParam(value = "address") String address,
                                                           @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         pageNo = pageNo == null ? 1 : pageNo;
         pageSize = pageSize == null ? Page.DEFAULT_PAGE_SIZE : (pageSize > 10 ? pageSize : Page.DEFAULT_PAGE_SIZE);
-        return domainsService.getControllerDomainsPage(address, pageNo, pageSize);
+        return domainsService.getControllerDomainsPage(networkId, address, pageNo, pageSize);
     }
 
     @GetMapping("registrant")
-    public Page<OwnerDomainName> getRegistrantDomainsPage(@RequestParam(value = "address", required = true) String address,
+    public Page<OwnerDomainName> getRegistrantDomainsPage(@RequestParam(value = "networkId") int networkId,
+                                                          @RequestParam(value = "address") String address,
                                                           @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         pageNo = pageNo == null ? 1 : pageNo;
         pageSize = pageSize == null ? Page.DEFAULT_PAGE_SIZE : (pageSize > 10 ? pageSize : Page.DEFAULT_PAGE_SIZE);
-        return domainsService.getRegistrantDomainsPage(address, pageNo, pageSize);
+        return domainsService.getRegistrantDomainsPage(networkId, address, pageNo, pageSize);
     }
 
     @GetMapping("subdomains")
-    public Page<OwnSubDomainName> getSubdomainsPage(@RequestParam(value = "label", required = true) String label,
+    public Page<OwnSubDomainName> getSubdomainsPage(@RequestParam(value = "networkId") int networkId,
+                                                    @RequestParam(value = "label") String label,
                                                     @RequestParam(value = "pageNo", required = false) Integer pageNo,
                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         pageNo = pageNo == null ? 1 : pageNo;
         pageSize = pageSize == null ? Page.DEFAULT_PAGE_SIZE : (pageSize > 10 ? pageSize : Page.DEFAULT_PAGE_SIZE);
-        return domainsService.getSubdomainsPage(label, pageNo, pageSize);
+        return domainsService.getSubdomainsPage(networkId, label, pageNo, pageSize);
     }
 
     /**
@@ -55,9 +58,10 @@ public class DomainsController {
      * @return
      */
     @GetMapping("reverse")
-    public List<OwnerDomainName> getReverseRecordDomains(@RequestParam(value = "address", required = true) String address) {
+    public List<OwnerDomainName> getReverseRecordDomains(@RequestParam(value = "networkId") int networkId,
+                                                         @RequestParam(value = "address") String address) {
 
-        return domainsService.getReverseRecordDomains(address);
+        return domainsService.getReverseRecordDomains(networkId, address);
     }
 
 

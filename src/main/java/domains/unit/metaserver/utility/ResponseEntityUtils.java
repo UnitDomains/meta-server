@@ -1,4 +1,4 @@
-package domains.unit.webserver.utility;
+package domains.unit.metaserver.utility;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

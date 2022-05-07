@@ -21,9 +21,6 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public EnsRegistryEventTransfer getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("select count(*) from ens_registry_event_transfer WHERE pk_id=?",
@@ -42,10 +39,10 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<EnsRegistryEventTransfer> getPageQuery(int pageNo, int pageSize) {
@@ -56,10 +53,10 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<EnsRegistryEventTransfer> getPage(int pageNo, int pageSize) {
@@ -78,6 +75,7 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
         public EnsRegistryEventTransfer mapRow(ResultSet rs, int rowNum) throws SQLException {
             EnsRegistryEventTransfer ensRegistryEventTransfer = new EnsRegistryEventTransfer();
             ensRegistryEventTransfer.setPkId(rs.getString("pk_id"));
+            ensRegistryEventTransfer.setNetworkId(rs.getInt("network_id"));
             ensRegistryEventTransfer.setNode(rs.getString("node"));
             ensRegistryEventTransfer.setOwner(rs.getString("owner"));
             ensRegistryEventTransfer.setTimestamp(rs.getDate("timestamp"));

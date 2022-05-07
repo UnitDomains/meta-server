@@ -5,7 +5,6 @@ import domains.unit.metaserver.model.Page;
 
 public interface BaseRegistrarEventNameRegisteredRepository {
 
-
     int getCount();
 
     BaseRegistrarEventNameRegistered getByPkId(String pkId);

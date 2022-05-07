@@ -8,6 +8,8 @@ import java.util.Date;
 @Component
 public class EthRegistrarControllerEventNameRenewed {
     private String pkId;//pk_id,主键
+
+    private int networkId;
     private String name;//name
     private String label;//label
     private BigInteger cost;//cost
@@ -79,5 +81,13 @@ public class EthRegistrarControllerEventNameRenewed {
 
     public void setOpTime(Date opTime) {
         this.opTime = opTime;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
     }
 }

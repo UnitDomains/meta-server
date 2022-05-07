@@ -21,9 +21,6 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
     }
 
 
-    /**
-     * 根据pkId得到记录
-     */
     @Override
     public BaseRegistrarEventTransfer getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("select count(*) from base_registrar_event_transfer WHERE pk_id=?",
@@ -42,10 +39,10 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
 
     private List<BaseRegistrarEventTransfer> getPageQuery(int pageNo, int pageSize) {
@@ -56,10 +53,10 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
     }
 
     /**
-     * 获得指定页面数据
+     * Gets the specified page data
      *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
+     * @param pageNo   page number, starting at 1
+     * @param pageSize records per page
      */
     @Override
     public Page<BaseRegistrarEventTransfer> getPage(int pageNo, int pageSize) {
@@ -78,6 +75,7 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
         public BaseRegistrarEventTransfer mapRow(ResultSet rs, int rowNum) throws SQLException {
             BaseRegistrarEventTransfer baseRegistrarEventTransfer = new BaseRegistrarEventTransfer();
             baseRegistrarEventTransfer.setPkId(rs.getString("pk_id"));
+            baseRegistrarEventTransfer.setNetworkId(rs.getInt("network_id"));
             baseRegistrarEventTransfer.setFromAddr(rs.getString("from_addr"));
             baseRegistrarEventTransfer.setToAddr(rs.getString("to_addr"));
             baseRegistrarEventTransfer.setTokenId(rs.getString("tokenId"));
