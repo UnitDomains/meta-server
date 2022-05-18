@@ -5,10 +5,10 @@ import domains.unit.metaserver.model.Page;
 
 public interface BaseRegistrarEventTransferService {
 
-	int getCount();
+    BaseRegistrarEventTransfer getByPkId(String pkId);
 
-	BaseRegistrarEventTransfer getByPkId(String pkId);
-
-	Page<BaseRegistrarEventTransfer> getPage(int pageNo, int pageSize);
+    Page<BaseRegistrarEventTransfer> getPage(int networkId,
+                                             int pageNo,
+                                             int pageSize);
 
 }

@@ -1,10 +1,12 @@
 package domains.unit.metaserver.service.impl;
 
 import domains.unit.metaserver.model.*;
+import domains.unit.metaserver.repository.DomainInfoRepository;
 import domains.unit.metaserver.repository.OwnerDomainNameRepository;
+import domains.unit.metaserver.repository.SubdomainInfoRepository;
 import domains.unit.metaserver.service.DomainsService;
 import domains.unit.metaserver.service.EnsRegistryEventNewOwnerService;
-import domains.unit.metaserver.service.SubdomainRegistrarEventNewSubdomainRegistrationService;
+import domains.unit.metaserver.utility.DomainName;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,68 +15,73 @@ import java.util.List;
 @Service
 public class DomainsServiceImpl implements DomainsService {
 
+    private final DomainInfoRepository domainInfoRepository;
     OwnerDomainNameRepository ownerDomainNameRepository;
     EnsRegistryEventNewOwnerService ensRegistryEventNewOwnerService;
-    SubdomainRegistrarEventNewSubdomainRegistrationService subdomainRegistrarEventNewSubdomainRegistrationService;
+    SubdomainInfoRepository subdomainInfoRepository;
+
 
     public DomainsServiceImpl(OwnerDomainNameRepository ownerDomainNameRepository,
                               EnsRegistryEventNewOwnerService ensRegistryEventNewOwnerService,
-                              SubdomainRegistrarEventNewSubdomainRegistrationService subdomainRegistrarEventNewSubdomainRegistrationService) {
+                              SubdomainInfoRepository subdomainInfoRepository,
+                              DomainInfoRepository domainInfoRepository) {
         this.ownerDomainNameRepository = ownerDomainNameRepository;
         this.ensRegistryEventNewOwnerService = ensRegistryEventNewOwnerService;
-        this.subdomainRegistrarEventNewSubdomainRegistrationService = subdomainRegistrarEventNewSubdomainRegistrationService;
+        this.subdomainInfoRepository = subdomainInfoRepository;
+        this.domainInfoRepository = domainInfoRepository;
     }
 
-    Page<String> convertEnsRegistryEventNewOwner2String(Page<EnsRegistryEventNewOwner> ensRegistryEventNewOwnerPage, int pageNo, int pageSize) {
-        if (ensRegistryEventNewOwnerPage == null) return null;
-
-        // 实际查询返回分页对象
-        int startIndex = Page.getStartOfPage(pageNo, pageSize);
-
-        List<String> list = new ArrayList<>();
-
-
-        for (EnsRegistryEventNewOwner ensRegistryEventNewOwner : ensRegistryEventNewOwnerPage.getResult()) {
-
-            if (ensRegistryEventNewOwner != null) list.add(ensRegistryEventNewOwner.getNode());
-        }
-
-
-        return new Page<>(startIndex, ensRegistryEventNewOwnerPage.getTotalCount(), pageSize, list);
-    }
 
     @Override
-    public Page<OwnerDomainName> getRegistrantDomainsPage(int networkId, String address, int pageNo, int pageSize) {
-        return ownerDomainNameRepository.getRegistrantDomainsPage(networkId, address, pageNo, pageSize);
+    public Page<OwnerDomainName> getRegistrantDomainsPage(int networkId,
+                                                          String address,
+                                                          int pageNo,
+                                                          int pageSize) {
+        return ownerDomainNameRepository.getRegistrantDomainsPage(networkId,
+                                                                  address,
+                                                                  pageNo,
+                                                                  pageSize);
 
 
     }
 
     @Override
-    public Page<OwnerDomainName> getControllerDomainsPage(int networkId, String address, int pageNo, int pageSize) {
+    public Page<OwnerDomainName> getControllerDomainsPage(int networkId,
+                                                          String address,
+                                                          int pageNo,
+                                                          int pageSize) {
 
-        return ownerDomainNameRepository.getControllerDomainsPage(networkId, address, pageNo, pageSize);
+        return ownerDomainNameRepository.getControllerDomainsPage(networkId,
+                                                                  address,
+                                                                  pageNo,
+                                                                  pageSize);
     }
 
     @Override
-    public List<OwnerDomainName> getReverseRecordDomains(int networkId, String address) {
-        List<OwnerDomainName> list1 = ownerDomainNameRepository.getReverseRecordDomains(networkId, address);
+    public List<OwnerDomainName> getReverseRecordDomains(int networkId,
+                                                         String address) {
+        List<OwnerDomainName> list1 = ownerDomainNameRepository.getReverseRecordDomains(networkId,
+                                                                                        address);
 
-        List<SubdomainRegistrarEventNewSubdomainRegistration> subdomainRegistrarEventNewSubdomainRegistrationList =
-                subdomainRegistrarEventNewSubdomainRegistrationService.getListByOwner(networkId, address);
+        List<SubdomainInfo> subdomainInfoList =
+                subdomainInfoRepository.getListByOwner(networkId,
+                                                       address);
 
-        if (subdomainRegistrarEventNewSubdomainRegistrationList != null && subdomainRegistrarEventNewSubdomainRegistrationList.size() > 0) {
+        if (subdomainInfoList != null && subdomainInfoList.size() > 0) {
             List<OwnerDomainName> list2 = new ArrayList<>();
-            for (SubdomainRegistrarEventNewSubdomainRegistration subdomain
-                    : subdomainRegistrarEventNewSubdomainRegistrationList) {
+            for (SubdomainInfo subdomainInfo : subdomainInfoList) {
 
-                if (subdomain != null) {
+                if (subdomainInfo != null) {
                     OwnerDomainName ownerDomainName = new OwnerDomainName();
 
 
                     OwnSubDomainName resultOwnSubDomainName = new OwnSubDomainName();
-                    OwnSubDomainName subname = getName(subdomain, resultOwnSubDomainName);
+                    OwnSubDomainName subname = getName(networkId,
+                                                       subdomainInfo,
+                                                       resultOwnSubDomainName);
+
                     if (subname != null) {
+
                         ownerDomainName.setName(subname.getName());
                         ownerDomainName.setBaseNodeIndex(subname.getBaseNodeIndex());
                     }
@@ -89,31 +96,35 @@ public class DomainsServiceImpl implements DomainsService {
 
     }
 
-    Page<OwnSubDomainName> convertSubdomainRegistrarEventNewSubdomainRegistration2OwnSubDomainName(
-            Page<SubdomainRegistrarEventNewSubdomainRegistration>
-                    subdomainPage,
-            int pageNo, int pageSize) {
-        if (subdomainPage == null) return null;
+    Page<OwnSubDomainName> convert(
+            int networkId,
+            Page<SubdomainInfo> subdomainInfoPage,
+            int pageNo,
+            int pageSize) {
+        if (subdomainInfoPage == null) return null;
 
-        // 实际查询返回分页对象
-        int startIndex = Page.getStartOfPage(pageNo, pageSize);
+
+        int startIndex = Page.getStartOfPage(pageNo,
+                                             pageSize);
 
         List<OwnSubDomainName> list = new ArrayList<>();
 
 
-        for (SubdomainRegistrarEventNewSubdomainRegistration subdomain
-                : subdomainPage.getResult()) {
+        for (SubdomainInfo subdomainInfo
+                : subdomainInfoPage.getResult()) {
 
-            if (subdomain != null) {
+            if (subdomainInfo != null) {
                 OwnSubDomainName ownSubDomainName = new OwnSubDomainName();
-                ownSubDomainName.setLabel(subdomain.getLabel());
-                ownSubDomainName.setNetworkId(subdomain.getNetworkId());
-                ownSubDomainName.setSubNodeLabel(subdomain.getSubNodeLabel());
-                ownSubDomainName.setSubDomain(subdomain.getSubDomain());
+                ownSubDomainName.setLabel(subdomainInfo.getLabel());
+                ownSubDomainName.setNetworkId(networkId);
+                ownSubDomainName.setSubNodeLabel(subdomainInfo.getSubNodeLabel());
+                ownSubDomainName.setSubDomain(subdomainInfo.getSubDomain());
 
                 OwnSubDomainName resultOwnSubDomainName = new OwnSubDomainName();
-                resultOwnSubDomainName.setNetworkId(subdomain.getNetworkId());
-                OwnSubDomainName subname = getName(subdomain, resultOwnSubDomainName);
+                resultOwnSubDomainName.setNetworkId(networkId);
+                OwnSubDomainName subname = getName(networkId,
+                                                   subdomainInfo,
+                                                   resultOwnSubDomainName);
                 if (subname != null) {
                     ownSubDomainName.setName(subname.getName());
                     ownSubDomainName.setBaseNodeIndex(subname.getBaseNodeIndex());
@@ -124,47 +135,144 @@ public class DomainsServiceImpl implements DomainsService {
         }
 
 
-        return new Page<>(startIndex, subdomainPage.getTotalCount(), pageSize, list);
+        return new Page<>(startIndex,
+                          subdomainInfoPage.getTotalCount(),
+                          pageSize,
+                          list);
     }
 
-    private OwnSubDomainName getName(SubdomainRegistrarEventNewSubdomainRegistration subdomain, OwnSubDomainName resultOwnSubDomainName) {
-        if (subdomain == null) return null;
+    private OwnSubDomainName getName(int networkId,
+                                     SubdomainInfo subdomainInfo,
+                                     OwnSubDomainName resultOwnSubDomainName) {
+        if (subdomainInfo == null) return null;
 
 
-        SubdomainRegistrarEventNewSubdomainRegistration parent =
-                subdomainRegistrarEventNewSubdomainRegistrationService.getBySubNodeLabel(subdomain.getLabel());
+        SubdomainInfo parent =
+                subdomainInfoRepository.getBySubNodeLabel(networkId,
+                                                          subdomainInfo.getLabel());
 
 
         if (parent == null) {
-            OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(resultOwnSubDomainName.getNetworkId(), subdomain.getLabel());
+            OwnerDomainName ownerDomainName =
+                    ownerDomainNameRepository.getOwnerDomainNameByLabel(
+                            networkId,
+                            subdomainInfo.getLabel());
+
 
             if (ownerDomainName != null) {
                 if (resultOwnSubDomainName.getName() != null)
                     resultOwnSubDomainName.setName(resultOwnSubDomainName.getName()
-                            + "." + subdomain.getSubDomain()
-                            + "." + ownerDomainName.getName());
+                                                           + "." + subdomainInfo.getSubDomain()
+                                                           + "." + ownerDomainName.getName());
                 else
-                    resultOwnSubDomainName.setName(subdomain.getSubDomain() + "." + ownerDomainName.getName());
+                    resultOwnSubDomainName.setName(subdomainInfo.getSubDomain() + "." + ownerDomainName.getName());
                 resultOwnSubDomainName.setBaseNodeIndex(ownerDomainName.getBaseNodeIndex());
                 return resultOwnSubDomainName;
             }
             return null;
         }
         if (resultOwnSubDomainName.getName() != null)
-            resultOwnSubDomainName.setName(resultOwnSubDomainName.getName() + "." + subdomain.getSubDomain());
+            resultOwnSubDomainName.setName(resultOwnSubDomainName.getName() + "." + subdomainInfo.getSubDomain());
         else
-            resultOwnSubDomainName.setName(subdomain.getSubDomain());
-        return getName(parent, resultOwnSubDomainName);
+            resultOwnSubDomainName.setName(subdomainInfo.getSubDomain());
+        return getName(networkId,
+                       parent,
+                       resultOwnSubDomainName);
 
 
     }
 
     @Override
-    public Page<OwnSubDomainName> getSubdomainsPage(int networkId, String label, Integer pageNo, Integer pageSize) {
-        Page<SubdomainRegistrarEventNewSubdomainRegistration> subdomainRegistrarEventNewSubdomainRegistrationPage =
-                subdomainRegistrarEventNewSubdomainRegistrationService.getPage(networkId, label, pageNo, pageSize);
+    public Page<OwnSubDomainName> getSubdomainsPage(int networkId,
+                                                    String label,
+                                                    Integer pageNo,
+                                                    Integer pageSize) {
+        Page<SubdomainInfo> subdomainInfoPage =
+                subdomainInfoRepository.getPage(networkId,
+                                                label,
+                                                pageNo,
+                                                pageSize);
 
-        return convertSubdomainRegistrarEventNewSubdomainRegistration2OwnSubDomainName(
-                subdomainRegistrarEventNewSubdomainRegistrationPage, pageNo, pageSize);
+        return convert(networkId,
+                       subdomainInfoPage,
+                       pageNo,
+                       pageSize);
     }
+
+
+    /**
+     * Get domain search results
+     *
+     * @param networkId
+     * @param searchText
+     * @return
+     */
+    @Override
+    public List<DomainInfo> getSpecificResultsOfDomains(int networkId,
+                                                        String searchText) {
+        if (searchText == null || searchText.trim().length() == 0)
+            return null;
+
+        String domain = DomainName.getDomain(searchText);//e.g. abc.cat=>abc
+        int baseNodeIndex = DomainName.getBaseNodeIndex(searchText);
+
+        if (baseNodeIndex >= 0) {
+            return domainInfoRepository.getList(networkId,
+                                                domain,
+                                                baseNodeIndex);
+        }
+        return null;
+    }
+
+    @Override
+    public List<DomainInfo> getNotAvailableResultsOfDomains(int networkId,
+                                                            String searchText) {
+        if (searchText == null || searchText.trim().length() == 0)
+            return null;
+
+        String domain = DomainName.getDomain(searchText);//e.g. abc.cat=>abc
+
+
+        return domainInfoRepository.getList(networkId,
+                                            domain);
+
+    }
+
+    @Override
+    public List<SuggestResult> getSuggestResultsOfDomains(int networkId,
+                                                          String searchText) {
+        if (searchText == null || searchText.trim().length() == 0)
+            return null;
+
+
+        String domain = DomainName.getDomain(searchText);//e.g. abc.cat=>abc
+
+        List<DomainInfo> domainInfoList = domainInfoRepository.getList(networkId,
+                                                                       domain);
+
+
+        List<SuggestResult> suggestResultList = new ArrayList<>();
+
+        for (String str : DomainName.DOMAIN_NAMES) {
+            if (!hasRegister(str,
+                             domainInfoList)) {
+                SuggestResult suggestResult = new SuggestResult();
+                suggestResult.setName(domain + "." + str);
+                suggestResult.setBaseNodeIndex(DomainName.getBaseNodeIndex(str));
+                suggestResultList.add(suggestResult);
+            }
+        }
+
+        return suggestResultList;
+    }
+
+    private boolean hasRegister(String str,
+                                List<DomainInfo> domainInfoList) {
+        for (DomainInfo domainInfo : domainInfoList) {
+            if (DomainName.DOMAIN_NAMES[domainInfo.getBaseNodeIndex()].equals(str)) return true;
+        }
+        return false;
+    }
+
+
 }

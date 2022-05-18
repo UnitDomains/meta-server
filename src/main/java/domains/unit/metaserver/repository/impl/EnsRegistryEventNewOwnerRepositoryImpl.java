@@ -23,10 +23,18 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
 
     @Override
     public EnsRegistryEventNewOwner getByPkId(String pkId) {
-        if (jdbcTemplate.queryForObject("select count(*) from ens_registry_event_new_owner WHERE pk_id=?",
+        if (jdbcTemplate.queryForObject("""
+                        SELECT count(*) 
+                        FROM ens_registry_event_new_owner 
+                        WHERE pk_id=?
+                        """,
                 new Object[]{pkId}, new int[]{Types.CHAR}, Integer.class) == 0)
             return null;
-        return jdbcTemplate.queryForObject("select * from ens_registry_event_new_owner WHERE pk_id=?",
+        return jdbcTemplate.queryForObject("""
+                        SELECT * 
+                        FROM ens_registry_event_new_owner 
+                        WHERE pk_id=?
+                        """,
                 new Object[]{pkId}, new int[]{Types.CHAR}, new EnsRegistryEventNewOwnerMapper());
     }
 
@@ -36,10 +44,14 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
      * @param address
      */
     @Override
-    public int getCount(String address) {
-        return jdbcTemplate.queryForObject("select count(*) from ens_registry_event_new_owner where owner=?",
-                new Object[]{address},
-                new int[]{Types.CHAR},
+    public int getCount(int networkId, String address) {
+        return jdbcTemplate.queryForObject("""
+                        SELECT count(*) 
+                        FROM ens_registry_event_new_owner 
+                        WHERE network_id=? AND owner=?
+                        """,
+                new Object[]{networkId, address},
+                new int[]{Types.INTEGER, Types.CHAR},
                 Integer.class);
     }
 
@@ -50,10 +62,15 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
      * @param pageSize records per page
      */
 
-    private List<EnsRegistryEventNewOwner> getPageQuery(String address, int pageNo, int pageSize) {
-        return jdbcTemplate.query("select * from ens_registry_event_new_owner where owner=? limit ?,?",
-                new Object[]{address, pageNo * pageSize, pageSize},
-                new int[]{Types.CHAR, Types.INTEGER, Types.INTEGER},
+    private List<EnsRegistryEventNewOwner> getPageQuery(int networkId, String address, int pageNo, int pageSize) {
+        return jdbcTemplate.query("""
+                        SELECT * 
+                        FROM ens_registry_event_new_owner 
+                        WHERE network_id=? 
+                        AND owner=? limit ?,?
+                        """,
+                new Object[]{networkId, address, pageNo * pageSize, pageSize},
+                new int[]{Types.INTEGER, Types.CHAR, Types.INTEGER, Types.INTEGER},
                 new EnsRegistryEventNewOwnerMapper());
     }
 
@@ -64,11 +81,11 @@ public class EnsRegistryEventNewOwnerRepositoryImpl implements EnsRegistryEventN
      * @param pageSize records per page
      */
     @Override
-    public Page<EnsRegistryEventNewOwner> getPage(String address, int pageNo, int pageSize) {
-        long totalCount = getCount(address);
+    public Page<EnsRegistryEventNewOwner> getPage(int networkId, String address, int pageNo, int pageSize) {
+        long totalCount = getCount(networkId, address);
         if (totalCount < 1) return new Page<>();
         int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<EnsRegistryEventNewOwner> resultData = getPageQuery(address, pageNo - 1, pageSize);
+        List<EnsRegistryEventNewOwner> resultData = getPageQuery(networkId, address, pageNo - 1, pageSize);
         return new Page<>(0, totalCount, (int) totalCount, resultData);
     }
 

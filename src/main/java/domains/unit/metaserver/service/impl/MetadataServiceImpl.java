@@ -7,6 +7,7 @@ import domains.unit.metaserver.model.metadata.MetaDataAttribute;
 import domains.unit.metaserver.repository.BaseRegistrarEventNameRegisteredRepository;
 import domains.unit.metaserver.repository.OwnerDomainNameRepository;
 import domains.unit.metaserver.service.MetadataService;
+import domains.unit.metaserver.utility.DomainName;
 import domains.unit.metaserver.utility.ResponseEntityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -96,8 +97,7 @@ public class MetadataServiceImpl implements MetadataService {
                 </switch>
             </svg>
             """;
-    private static final String[] DOMAIN_NAMES = "about,area,beyond,book,cat,cell,dream,dog,east,enjoy,enter,everything,earth,focus,foot,friend,girl,go,good,boy,happy,high,hour,home,here,image,item,keep,key,local,lucky,main,meta,moon,nature,nice,north,verse,option,owner,person,player,point,position,power,rain,record,region,right,room,sea,side,spring,station,street,south,time,ten,unit,wind,yeah,west,well,world".split(",");
-    //private static final String[] DOMAIN_NAMES = "cat,dog,unit".split(",");
+
 
     OwnerDomainNameRepository ownerDomainNameRepository;
     BaseRegistrarEventNameRegisteredRepository baseRegistrarEventNameRegisteredRepository;
@@ -108,7 +108,8 @@ public class MetadataServiceImpl implements MetadataService {
         this.baseRegistrarEventNameRegisteredRepository = baseRegistrarEventNameRegisteredRepository;
     }
 
-    private String getImage(String name, String tokenId) {
+    private String getImage(String name,
+                            String tokenId) {
 
         System.out.println(tokenId);
         if (tokenId.length() == 66)
@@ -119,24 +120,56 @@ public class MetadataServiceImpl implements MetadataService {
 
 
         String image = SVG_TEMPLATE;
-        image = image.replace("{C0}", tokenId.substring(0, 4));
-        image = image.replace("{C1}", tokenId.substring(4, 8));
-        image = image.replace("{C2}", tokenId.substring(8, 12));
-        image = image.replace("{C3}", tokenId.substring(12, 16));
-        image = image.replace("{C4}", tokenId.substring(16, 20));
-        image = image.replace("{C5}", tokenId.substring(20, 24));
-        image = image.replace("{C6}", tokenId.substring(24, 28));
-        image = image.replace("{C7}", tokenId.substring(28, 32));
-        image = image.replace("{C8}", tokenId.substring(32, 36));
-        image = image.replace("{C9}", tokenId.substring(36, 40));
-        image = image.replace("{C10}", tokenId.substring(40, 44));
-        image = image.replace("{C11}", tokenId.substring(44, 48));
-        image = image.replace("{C12}", tokenId.substring(48, 52));
-        image = image.replace("{C13}", tokenId.substring(52, 56));
-        image = image.replace("{C14}", tokenId.substring(56, 60));
-        image = image.replace("{C15}", tokenId.substring(60));
+        image = image.replace("{C0}",
+                              tokenId.substring(0,
+                                                4));
+        image = image.replace("{C1}",
+                              tokenId.substring(4,
+                                                8));
+        image = image.replace("{C2}",
+                              tokenId.substring(8,
+                                                12));
+        image = image.replace("{C3}",
+                              tokenId.substring(12,
+                                                16));
+        image = image.replace("{C4}",
+                              tokenId.substring(16,
+                                                20));
+        image = image.replace("{C5}",
+                              tokenId.substring(20,
+                                                24));
+        image = image.replace("{C6}",
+                              tokenId.substring(24,
+                                                28));
+        image = image.replace("{C7}",
+                              tokenId.substring(28,
+                                                32));
+        image = image.replace("{C8}",
+                              tokenId.substring(32,
+                                                36));
+        image = image.replace("{C9}",
+                              tokenId.substring(36,
+                                                40));
+        image = image.replace("{C10}",
+                              tokenId.substring(40,
+                                                44));
+        image = image.replace("{C11}",
+                              tokenId.substring(44,
+                                                48));
+        image = image.replace("{C12}",
+                              tokenId.substring(48,
+                                                52));
+        image = image.replace("{C13}",
+                              tokenId.substring(52,
+                                                56));
+        image = image.replace("{C14}",
+                              tokenId.substring(56,
+                                                60));
+        image = image.replace("{C15}",
+                              tokenId.substring(60));
 
-        image = image.replace("{DOMAINS}", name);
+        image = image.replace("{DOMAINS}",
+                              name);
 
         return image;
     }
@@ -170,33 +203,42 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
-    public ResponseEntity<MetaData> getMetadata(String networkName, String contractAddress, String tokenId) {
+    public ResponseEntity<MetaData> getMetadata(String networkName,
+                                                String contractAddress,
+                                                String tokenId) {
 
 
         if (networkName == null || contractAddress == null || tokenId == null ||
                 networkName.length() == 0 || contractAddress.length() == 0 || tokenId.length() == 0)
-            return ResponseEntityUtils.badRequest(null, "null object");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "null object");
 
         int networkId = getNetworkId(networkName);
 
 
         if (networkId <= 0)
-            return ResponseEntityUtils.badRequest(null, "error network name");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "error network name");
 
         if (!contractAddress.equals(getContractAddress(networkId)))
-            return ResponseEntityUtils.badRequest(null, "error contract address");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "error contract address");
 
 
-        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId, tokenId);
+        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId,
+                                                                                              tokenId);
 
         if (ownerDomainName == null)
-            return ResponseEntityUtils.badRequest(null, "error value of tokenId");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "error value of tokenId");
 
-        if (ownerDomainName.getBaseNodeIndex() >= DOMAIN_NAMES.length)
-            return ResponseEntityUtils.internalServerError(null, "error value of base node index");
+        if (ownerDomainName.getBaseNodeIndex() >= DomainName.DOMAIN_NAMES.length)
+            return ResponseEntityUtils.internalServerError(null,
+                                                           "error value of base node index");
 
         MetaData metaData = new MetaData();
-        String domainName = ownerDomainName.getName() + "." + DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()];
+        String domainName =
+                ownerDomainName.getName() + "." + DomainName.DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()];
         metaData.setName(domainName);
 
         metaData.setImage("https://metadata.unit.domains/" + networkName + "/" + contractAddress + "/" + tokenId + "/image");
@@ -204,8 +246,9 @@ public class MetadataServiceImpl implements MetadataService {
         metaData.setImage_url("https://metadata.unit.domains/" + networkName + "/" + contractAddress + "/" + tokenId + "/image");
 
         String str = getImage(ownerDomainName.getName() +
-                "." +
-                DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()], tokenId);
+                                      "." +
+                                      DomainName.DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()],
+                              tokenId);
 
         metaData.setImage_data(str);
 
@@ -217,7 +260,8 @@ public class MetadataServiceImpl implements MetadataService {
         List<MetaDataAttribute> metaDataAttributeList = new ArrayList<>();
 
         BaseRegistrarEventNameRegistered baseRegistrarEventNameRegistered =
-                baseRegistrarEventNameRegisteredRepository.getById(tokenId);
+                baseRegistrarEventNameRegisteredRepository.getById(networkId,
+                                                                   tokenId);
 
 
         if (baseRegistrarEventNameRegistered != null) {
@@ -230,7 +274,8 @@ public class MetadataServiceImpl implements MetadataService {
             MetaDataAttribute metaDataAttributeRegistration = new MetaDataAttribute();
             metaDataAttributeRegistration.setTrait_type("Registration Date");
             metaDataAttributeRegistration.setDisplay_type("date");
-            metaDataAttributeRegistration.setValue(BigInteger.valueOf(baseRegistrarEventNameRegistered.getTimestamp().getTime()));
+            metaDataAttributeRegistration.setValue(BigInteger.valueOf(baseRegistrarEventNameRegistered.getTimestamp()
+                                                                                                      .getTime()));
             metaDataAttributeList.add(metaDataAttributeRegistration);
 
             MetaDataAttribute metaDataAttributeCreated = new MetaDataAttribute();
@@ -246,38 +291,46 @@ public class MetadataServiceImpl implements MetadataService {
             metaData.setAttributes(metaDataAttributeList);
 
         return ResponseEntity.ok(metaData);
-
     }
 
     @Override
-    public ResponseEntity<String> getMetaDataImage(String networkName, String contractAddress, String tokenId) {
+    public ResponseEntity<String> getMetaDataImage(String networkName,
+                                                   String contractAddress,
+                                                   String tokenId) {
 
 
         if (networkName == null || contractAddress == null || tokenId == null ||
                 networkName.length() == 0 || contractAddress.length() == 0 || tokenId.length() == 0)
-            return ResponseEntityUtils.badRequest(null, "null object");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "null object");
 
 
         int networkId = getNetworkId(networkName);
 
 
         if (networkId <= 0)
-            return ResponseEntityUtils.badRequest(null, "error network name");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "error network name");
 
         if (!contractAddress.equals(getContractAddress(networkId)))
-            return ResponseEntityUtils.badRequest(null, "error contract address");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "error contract address");
 
-        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId, tokenId);
+        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId,
+                                                                                              tokenId);
 
         if (ownerDomainName == null)
-            return ResponseEntityUtils.badRequest(null, "error value of tokenId");
+            return ResponseEntityUtils.badRequest(null,
+                                                  "error value of tokenId");
 
-        if (ownerDomainName.getBaseNodeIndex() >= DOMAIN_NAMES.length)
-            return ResponseEntityUtils.internalServerError(null, "error value of base node index");
+        if (ownerDomainName.getBaseNodeIndex() >= DomainName.DOMAIN_NAMES.length)
+            return ResponseEntityUtils.internalServerError(null,
+                                                           "error value of base node index");
 
         String str = getImage(ownerDomainName.getName() +
-                "." +
-                DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()], tokenId);
+                                      "." +
+                                      DomainName.DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()],
+                              tokenId);
 
         return ResponseEntity.ok(str);
     }

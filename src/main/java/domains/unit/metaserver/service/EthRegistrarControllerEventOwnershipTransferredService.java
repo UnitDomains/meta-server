@@ -6,8 +6,8 @@ import domains.unit.metaserver.model.Page;
 
 public interface EthRegistrarControllerEventOwnershipTransferredService {
 
-    int getCount();
-
-    Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int pageNo, int pageSize);
+    Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int networkId,
+                                                                  int pageNo,
+                                                                  int pageSize);
 
 }

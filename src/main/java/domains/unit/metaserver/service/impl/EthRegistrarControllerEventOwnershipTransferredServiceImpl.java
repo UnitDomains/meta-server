@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EthRegistrarControllerEventOwnershipTransferredServiceImpl implements
-        EthRegistrarControllerEventOwnershipTransferredService {
+                                                                        EthRegistrarControllerEventOwnershipTransferredService {
     private final EthRegistrarControllerEventOwnershipTransferredRepository
             ethRegistrarControllerEventOwnershipTransferredRepository;
 
@@ -18,22 +18,14 @@ public class EthRegistrarControllerEventOwnershipTransferredServiceImpl implemen
         this.ethRegistrarControllerEventOwnershipTransferredRepository =
                 ethRegistrarControllerEventOwnershipTransferredRepository;
     }
-
-
+    
     @Override
-    public int getCount() {
-        return ethRegistrarControllerEventOwnershipTransferredRepository.getCount();
-    }
-
-    /**
-     * Gets the specified page data
-     *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
-     */
-    @Override
-    public Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int pageNo, int pageSize) {
-        return ethRegistrarControllerEventOwnershipTransferredRepository.getPage(pageNo, pageSize);
+    public Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int networkId,
+                                                                         int pageNo,
+                                                                         int pageSize) {
+        return ethRegistrarControllerEventOwnershipTransferredRepository.getPage(networkId,
+                                                                                 pageNo,
+                                                                                 pageSize);
     }
 
 }

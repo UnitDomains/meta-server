@@ -16,29 +16,18 @@ public class BaseRegistrarEventTransferServiceImpl implements BaseRegistrarEvent
 
 
     @Override
-    public int getCount() {
-        return baseRegistrarEventTransferRepository.getCount();
-    }
-
-    /**
-     * 根据pkId得到BaseRegistrarEventTransfer
-     *
-     * @param pkId
-     */
-    @Override
     public BaseRegistrarEventTransfer getByPkId(String pkId) {
         return baseRegistrarEventTransferRepository.getByPkId(pkId);
     }
 
-    /**
-     * 获得指定页面数据
-     *
-     * @param pageNo   页号，从1开始
-     * @param pageSize 每页的记录数
-     */
+
     @Override
-    public Page<BaseRegistrarEventTransfer> getPage(int pageNo, int pageSize) {
-        return baseRegistrarEventTransferRepository.getPage(pageNo, pageSize);
+    public Page<BaseRegistrarEventTransfer> getPage(int networkId,
+                                                    int pageNo,
+                                                    int pageSize) {
+        return baseRegistrarEventTransferRepository.getPage(networkId,
+                                                            pageNo,
+                                                            pageSize);
     }
 
 }

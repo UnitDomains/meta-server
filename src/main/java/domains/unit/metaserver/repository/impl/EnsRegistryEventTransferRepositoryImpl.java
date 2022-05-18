@@ -23,10 +23,18 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
 
     @Override
     public EnsRegistryEventTransfer getByPkId(String pkId) {
-        if (jdbcTemplate.queryForObject("select count(*) from ens_registry_event_transfer WHERE pk_id=?",
+        if (jdbcTemplate.queryForObject("""
+                        SELECT count(*) 
+                        FROM ens_registry_event_transfer 
+                        WHERE pk_id=?
+                        """,
                 new Object[]{pkId}, new int[]{Types.CHAR}, Integer.class) == 0)
             return null;
-        return jdbcTemplate.queryForObject("select * from ens_registry_event_transfer WHERE pk_id=?",
+        return jdbcTemplate.queryForObject("""
+                        SELECT * 
+                        FROM ens_registry_event_transfer 
+                        WHERE pk_id=?
+                        """,
                 new Object[]{pkId}, new int[]{Types.CHAR}, new EnsRegistryEventTransferMapper());
     }
 
@@ -34,8 +42,14 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
      * getCount
      */
     @Override
-    public int getCount() {
-        return jdbcTemplate.queryForObject("select count(*) from ens_registry_event_transfer", Integer.class);
+    public int getCount(int networkId) {
+        return jdbcTemplate.queryForObject("""
+                        SELECT count(*) 
+                        FROM ens_registry_event_transfer 
+                        WHERE network_id=?
+                        """,
+                new Object[]{networkId}, new int[]{Types.INTEGER},
+                Integer.class);
     }
 
     /**
@@ -45,10 +59,14 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
      * @param pageSize records per page
      */
 
-    private List<EnsRegistryEventTransfer> getPageQuery(int pageNo, int pageSize) {
-        return jdbcTemplate.query("select * from ens_registry_event_transfer limit ?,?",
-                new Object[]{pageNo * pageSize, pageSize},
-                new int[]{Types.INTEGER, Types.INTEGER},
+    private List<EnsRegistryEventTransfer> getPageQuery(int networkId, int pageNo, int pageSize) {
+        return jdbcTemplate.query("""
+                        SELECT * 
+                        FROM ens_registry_event_transfer 
+                        WHERE network_id=? limit ?,?
+                        """,
+                new Object[]{networkId, pageNo * pageSize, pageSize},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER},
                 new EnsRegistryEventTransferMapper());
     }
 
@@ -59,11 +77,11 @@ public class EnsRegistryEventTransferRepositoryImpl implements EnsRegistryEventT
      * @param pageSize records per page
      */
     @Override
-    public Page<EnsRegistryEventTransfer> getPage(int pageNo, int pageSize) {
-        long totalCount = getCount();
+    public Page<EnsRegistryEventTransfer> getPage(int networkId, int pageNo, int pageSize) {
+        long totalCount = getCount(networkId);
         if (totalCount < 1) return new Page<>();
         int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<EnsRegistryEventTransfer> resultData = getPageQuery(pageNo - 1, pageSize);
+        List<EnsRegistryEventTransfer> resultData = getPageQuery(networkId, pageNo - 1, pageSize);
         return new Page<>(0, totalCount, (int) totalCount, resultData);
     }
 

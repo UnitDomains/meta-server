@@ -5,10 +5,10 @@ import domains.unit.metaserver.model.Page;
 
 public interface EthRegistrarControllerEventNameRegisteredRepository {
 
-    int getCount();
+    int getCount(int networkId);
 
     EthRegistrarControllerEventNameRegistered getByPkId(String pkId);
 
-    Page<EthRegistrarControllerEventNameRegistered> getPage(int pageNo, int pageSize);
+    Page<EthRegistrarControllerEventNameRegistered> getPage(int networkId, int pageNo, int pageSize);
 
 }

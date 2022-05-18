@@ -7,17 +7,20 @@ import java.util.List;
 
 public interface SubdomainRegistrarEventNewSubdomainRegistrationService {
 
-
-    int getCount();
-
     SubdomainRegistrarEventNewSubdomainRegistration getByPkId(String pkId);
 
-    SubdomainRegistrarEventNewSubdomainRegistration getByLabel(String label);
+    SubdomainRegistrarEventNewSubdomainRegistration getByLabel(int networkId,
+                                                               String label);
 
-    SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(String subNodeLabel);
+    SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(int networkId,
+                                                                      String subNodeLabel);
 
-    Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId, String label, int pageNo, int pageSize);
+    Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId,
+                                                                  String label,
+                                                                  int pageNo,
+                                                                  int pageSize);
 
-    List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId, String owner);
+    List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId,
+                                                                         String owner);
 
 }

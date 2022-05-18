@@ -5,12 +5,12 @@ import domains.unit.metaserver.model.Page;
 
 public interface BaseRegistrarEventNameRegisteredRepository {
 
-    int getCount();
+    int getCount(int networkId);
 
     BaseRegistrarEventNameRegistered getByPkId(String pkId);
 
-    BaseRegistrarEventNameRegistered getById(String id);
+    BaseRegistrarEventNameRegistered getById(int networkId, String id);
 
-    Page<BaseRegistrarEventNameRegistered> getPage(int pageNo, int pageSize);
+    Page<BaseRegistrarEventNameRegistered> getPage(int networkId, int pageNo, int pageSize);
 
 }

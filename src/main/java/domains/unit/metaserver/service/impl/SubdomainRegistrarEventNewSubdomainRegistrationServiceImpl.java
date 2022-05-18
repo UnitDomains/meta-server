@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class SubdomainRegistrarEventNewSubdomainRegistrationServiceImpl implements
-        SubdomainRegistrarEventNewSubdomainRegistrationService {
+                                                                        SubdomainRegistrarEventNewSubdomainRegistrationService {
     private final SubdomainRegistrarEventNewSubdomainRegistrationRepository
             subdomainRegistrarEventNewSubdomainRegistrationRepository;
 
@@ -20,48 +20,43 @@ public class SubdomainRegistrarEventNewSubdomainRegistrationServiceImpl implemen
         this.subdomainRegistrarEventNewSubdomainRegistrationRepository =
                 subdomainRegistrarEventNewSubdomainRegistrationRepository;
     }
-
-
-    @Override
-    public int getCount() {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getCount();
-    }
-
-    /**
-     * 根据pkId得到SubdomainRegistrarEventNewSubdomainRegistration
-     *
-     * @param pkId
-     */
+    
     @Override
     public SubdomainRegistrarEventNewSubdomainRegistration getByPkId(String pkId) {
         return subdomainRegistrarEventNewSubdomainRegistrationRepository.getByPkId(pkId);
     }
 
     @Override
-    public SubdomainRegistrarEventNewSubdomainRegistration getByLabel(String label) {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getByLabel(label);
+    public SubdomainRegistrarEventNewSubdomainRegistration getByLabel(int networkId,
+                                                                      String label) {
+        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getByLabel(networkId,
+                                                                                    label);
     }
 
     @Override
-    public SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(String subNodeLabel) {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getBySubNodeLabel(subNodeLabel);
+    public SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(int networkId,
+                                                                             String subNodeLabel) {
+        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getBySubNodeLabel(networkId,
+                                                                                           subNodeLabel);
     }
 
-    /**
-     * 获得指定页面数据
-     *
-     * @param networkId
-     * @param pageNo    页号，从1开始
-     * @param pageSize  每页的记录数
-     */
+
     @Override
-    public Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId, String label, int pageNo, int pageSize) {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getPage(networkId, label, pageNo, pageSize);
+    public Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId,
+                                                                         String label,
+                                                                         int pageNo,
+                                                                         int pageSize) {
+        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getPage(networkId,
+                                                                                 label,
+                                                                                 pageNo,
+                                                                                 pageSize);
     }
 
     @Override
-    public List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId, String owner) {
-        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getListByOwner(networkId, owner);
+    public List<SubdomainRegistrarEventNewSubdomainRegistration> getListByOwner(int networkId,
+                                                                                String owner) {
+        return subdomainRegistrarEventNewSubdomainRegistrationRepository.getListByOwner(networkId,
+                                                                                        owner);
     }
 
 }

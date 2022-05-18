@@ -23,10 +23,10 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
 
     @Override
     public BaseRegistrarEventTransfer getByPkId(String pkId) {
-        if (jdbcTemplate.queryForObject("select count(*) from base_registrar_event_transfer WHERE pk_id=?",
+        if (jdbcTemplate.queryForObject("SELECT count(*) FROM base_registrar_event_transfer WHERE pk_id=?",
                 new Object[]{pkId}, new int[]{Types.CHAR}, Integer.class) == 0)
             return null;
-        return jdbcTemplate.queryForObject("select * from base_registrar_event_transfer WHERE pk_id=?",
+        return jdbcTemplate.queryForObject("SELECT * FROM base_registrar_event_transfer WHERE pk_id=?",
                 new Object[]{pkId}, new int[]{Types.CHAR}, new BaseRegistrarEventTransferMapper());
     }
 
@@ -34,8 +34,10 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
      * getCount
      */
     @Override
-    public int getCount() {
-        return jdbcTemplate.queryForObject("select count(*) from base_registrar_event_transfer", Integer.class);
+    public int getCount(int networkId) {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM base_registrar_event_transfer WHERE network_id=?",
+                new Object[]{networkId}, new int[]{Types.INTEGER},
+                Integer.class);
     }
 
     /**
@@ -45,10 +47,10 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
      * @param pageSize records per page
      */
 
-    private List<BaseRegistrarEventTransfer> getPageQuery(int pageNo, int pageSize) {
-        return jdbcTemplate.query("select * from base_registrar_event_transfer limit ?,?",
-                new Object[]{pageNo * pageSize, pageSize},
-                new int[]{Types.INTEGER, Types.INTEGER},
+    private List<BaseRegistrarEventTransfer> getPageQuery(int networkId, int pageNo, int pageSize) {
+        return jdbcTemplate.query("SELECT * FROM base_registrar_event_transfer WHERE network_id=? limit ?,?",
+                new Object[]{networkId, pageNo * pageSize, pageSize},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER},
                 new BaseRegistrarEventTransferMapper());
     }
 
@@ -59,11 +61,11 @@ public class BaseRegistrarEventTransferRepositoryImpl implements BaseRegistrarEv
      * @param pageSize records per page
      */
     @Override
-    public Page<BaseRegistrarEventTransfer> getPage(int pageNo, int pageSize) {
-        long totalCount = getCount();
+    public Page<BaseRegistrarEventTransfer> getPage(int networkId, int pageNo, int pageSize) {
+        long totalCount = getCount(networkId);
         if (totalCount < 1) return new Page<>();
         int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<BaseRegistrarEventTransfer> resultData = getPageQuery(pageNo - 1, pageSize);
+        List<BaseRegistrarEventTransfer> resultData = getPageQuery(networkId, pageNo - 1, pageSize);
         return new Page<>(0, totalCount, (int) totalCount, resultData);
     }
 

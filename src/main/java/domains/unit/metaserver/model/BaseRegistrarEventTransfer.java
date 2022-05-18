@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Component
 public class BaseRegistrarEventTransfer {
-    private String pkId;//pk_id,主键
+    private String pkId;//pk_id
 
     private int networkId;
     private String fromAddr;//from_addr

@@ -22,11 +22,13 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
 
 
     @Override
-    public int getCount() {
+    public int getCount(int networkId) {
         return jdbcTemplate.queryForObject("""
-                        select count(*)
-                        from eth_registrar_controller_event_ownership_transferred
+                        SELECT count(*)
+                        FROM eth_registrar_controller_event_ownership_transferred
+                        WHERE network_id=?
                         """,
+                new Object[]{networkId}, new int[]{Types.INTEGER},
                 Integer.class);
     }
 
@@ -37,10 +39,14 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
      * @param pageSize records per page
      */
 
-    private List<EthRegistrarControllerEventOwnershipTransferred> getPageQuery(int pageNo, int pageSize) {
-        return jdbcTemplate.query("select * from eth_registrar_controller_event_ownership_transferred limit ?,?",
-                new Object[]{pageNo * pageSize, pageSize},
-                new int[]{Types.INTEGER, Types.INTEGER},
+    private List<EthRegistrarControllerEventOwnershipTransferred> getPageQuery(int networkId, int pageNo, int pageSize) {
+        return jdbcTemplate.query("""
+                        SELECT * 
+                        FROM eth_registrar_controller_event_ownership_transferred 
+                        WHERE network_id=? limit ?,?
+                        """,
+                new Object[]{networkId, pageNo * pageSize, pageSize},
+                new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER},
                 new EthRegistrarControllerEventOwnershipTransferredMapper());
     }
 
@@ -51,11 +57,11 @@ public class EthRegistrarControllerEventOwnershipTransferredRepositoryImpl imple
      * @param pageSize records per page
      */
     @Override
-    public Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int pageNo, int pageSize) {
-        long totalCount = getCount();
+    public Page<EthRegistrarControllerEventOwnershipTransferred> getPage(int networkId, int pageNo, int pageSize) {
+        long totalCount = getCount(networkId);
         if (totalCount < 1) return new Page<>();
         int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<EthRegistrarControllerEventOwnershipTransferred> resultData = getPageQuery(pageNo - 1, pageSize);
+        List<EthRegistrarControllerEventOwnershipTransferred> resultData = getPageQuery(networkId, pageNo - 1, pageSize);
         return new Page<>(0, totalCount, (int) totalCount, resultData);
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
-        EthRegistrarControllerEventNameRegisteredRepository {
+                                                                     EthRegistrarControllerEventNameRegisteredRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public EthRegistrarControllerEventNameRegisteredRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -26,30 +26,33 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
     @Override
     public EthRegistrarControllerEventNameRegistered getByPkId(String pkId) {
         if (jdbcTemplate.queryForObject("""
-                        select count(*) 
-                        from eth_registrar_controller_event_name_registered 
-                        WHERE pk_id=?
-                        """,
-                new Object[]{pkId},
-                new int[]{Types.CHAR},
-                Integer.class) == 0)
+                                                SELECT count(*) 
+                                                FROM eth_registrar_controller_event_name_registered 
+                                                WHERE pk_id=?
+                                                """,
+                                        new Object[]{pkId},
+                                        new int[]{Types.CHAR},
+                                        Integer.class) == 0)
             return null;
         return jdbcTemplate.queryForObject("""
-                        select * from eth_registrar_controller_event_name_registered 
-                        WHERE pk_id=?""",
-                new Object[]{pkId},
-                new int[]{Types.CHAR},
-                new EthRegistrarControllerEventNameRegisteredMapper());
+                                                   SELECT * 
+                                                   FROM eth_registrar_controller_event_name_registered 
+                                                   WHERE pk_id=?""",
+                                           new Object[]{pkId},
+                                           new int[]{Types.CHAR},
+                                           new EthRegistrarControllerEventNameRegisteredMapper());
     }
 
 
     @Override
-    public int getCount() {
+    public int getCount(int networkId) {
         return jdbcTemplate.queryForObject("""
-                        select count(*) 
-                        from eth_registrar_controller_event_name_registered
-                        """,
-                Integer.class);
+                                                   SELECT count(*) 
+                                                   FROM eth_registrar_controller_event_name_registered
+                                                   """,
+                                           new Object[]{networkId},
+                                           new int[]{Types.INTEGER},
+                                           Integer.class);
     }
 
     /**
@@ -59,11 +62,17 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
      * @param pageSize records per page
      */
 
-    private List<EthRegistrarControllerEventNameRegistered> getPageQuery(int pageNo, int pageSize) {
-        return jdbcTemplate.query("select * from eth_registrar_controller_event_name_registered limit ?,?",
-                new Object[]{pageNo * pageSize, pageSize},
-                new int[]{Types.INTEGER, Types.INTEGER},
-                new EthRegistrarControllerEventNameRegisteredMapper());
+    private List<EthRegistrarControllerEventNameRegistered> getPageQuery(int networkId,
+                                                                         int pageNo,
+                                                                         int pageSize) {
+        return jdbcTemplate.query("""
+                                          SELECT * 
+                                          FROM eth_registrar_controller_event_name_registered 
+                                          WHERE network_id=? limit ?,? 
+                                          """,
+                                  new Object[]{networkId, pageNo * pageSize, pageSize},
+                                  new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER},
+                                  new EthRegistrarControllerEventNameRegisteredMapper());
     }
 
     /**
@@ -73,21 +82,30 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
      * @param pageSize records per page
      */
     @Override
-    public Page<EthRegistrarControllerEventNameRegistered> getPage(int pageNo, int pageSize) {
-        long totalCount = getCount();
+    public Page<EthRegistrarControllerEventNameRegistered> getPage(int networkId,
+                                                                   int pageNo,
+                                                                   int pageSize) {
+        long totalCount = getCount(networkId);
         if (totalCount < 1) return new Page<>();
-        int startIndex = Page.getStartOfPage(pageNo, pageSize);
-        List<EthRegistrarControllerEventNameRegistered> resultData = getPageQuery(pageNo - 1, pageSize);
-        return new Page<>(0, totalCount, (int) totalCount, resultData);
+        int startIndex = Page.getStartOfPage(pageNo,
+                                             pageSize);
+        List<EthRegistrarControllerEventNameRegistered> resultData = getPageQuery(networkId,
+                                                                                  pageNo - 1,
+                                                                                  pageSize);
+        return new Page<>(0,
+                          totalCount,
+                          (int) totalCount,
+                          resultData);
     }
 
     /**
      * RowMapper
      */
     private static final class EthRegistrarControllerEventNameRegisteredMapper implements
-            RowMapper<EthRegistrarControllerEventNameRegistered> {
+                                                                               RowMapper<EthRegistrarControllerEventNameRegistered> {
         @Override
-        public EthRegistrarControllerEventNameRegistered mapRow(ResultSet rs, int rowNum) throws SQLException {
+        public EthRegistrarControllerEventNameRegistered mapRow(ResultSet rs,
+                                                                int rowNum) throws SQLException {
             EthRegistrarControllerEventNameRegistered ethRegistrarControllerEventNameRegistered =
                     new EthRegistrarControllerEventNameRegistered();
             ethRegistrarControllerEventNameRegistered.setPkId(rs.getString("pk_id"));
@@ -96,7 +114,7 @@ public class EthRegistrarControllerEventNameRegisteredRepositoryImpl implements
             ethRegistrarControllerEventNameRegistered.setOwner(rs.getString("owner"));
             ethRegistrarControllerEventNameRegistered.setCost(BigInteger.valueOf(rs.getLong("cost")));
             ethRegistrarControllerEventNameRegistered.setExpires(BigInteger.valueOf(rs.getLong("expires")));
-            ethRegistrarControllerEventNameRegistered.setBaseNodeIndex(rs.getInt("baseNodeIndex"));
+            ethRegistrarControllerEventNameRegistered.setBaseNodeIndex(rs.getInt("base_node_index"));
             ethRegistrarControllerEventNameRegistered.setTimestamp(rs.getDate("timestamp"));
             ethRegistrarControllerEventNameRegistered.setOpTime(rs.getDate("op_time"));
             return ethRegistrarControllerEventNameRegistered;

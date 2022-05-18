@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface SubdomainRegistrarEventNewSubdomainRegistrationRepository {
 
-    int getCount();
+    int getCount(int networkId);
 
     SubdomainRegistrarEventNewSubdomainRegistration getByPkId(String pkId);
 
-    SubdomainRegistrarEventNewSubdomainRegistration getByLabel(String label);
+    SubdomainRegistrarEventNewSubdomainRegistration getByLabel(int networkId, String label);
 
-    SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(String subNodeLabel);
+    SubdomainRegistrarEventNewSubdomainRegistration getBySubNodeLabel(int networkId, String subNodeLabel);
 
     Page<SubdomainRegistrarEventNewSubdomainRegistration> getPage(int networkId, String label, int pageNo, int pageSize);
 
