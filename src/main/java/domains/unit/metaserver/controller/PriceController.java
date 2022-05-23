@@ -16,10 +16,15 @@ public class PriceController {
         this.priceInfoService = priceInfoService;
     }
 
+    @GetMapping("price")
+    public PriceInfo getControllerDomainsPage(@RequestParam(value = "networkId") int networkId) {
+
+        return priceInfoService.getPrice(networkId);
+    }
 
     @GetMapping("rent")
-    public PriceInfo getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
-                                              @RequestParam(value = "domainName") String domainName) {
+    public String getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
+                                           @RequestParam(value = "domainName") String domainName) {
 
         return priceInfoService.getRentYearsPrice(networkId,
                                                   domainName,
@@ -28,9 +33,9 @@ public class PriceController {
 
 
     @GetMapping("rentyears")
-    public PriceInfo getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
-                                              @RequestParam(value = "domainName") String domainName,
-                                              @RequestParam(value = "years") Integer years) {
+    public String getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
+                                           @RequestParam(value = "domainName") String domainName,
+                                           @RequestParam(value = "years") Integer years) {
 
         return priceInfoService.getRentYearsPrice(networkId,
                                                   domainName,
@@ -38,8 +43,8 @@ public class PriceController {
     }
 
     @GetMapping("register")
-    public PriceInfo getRegistrantDomainsPage(@RequestParam(value = "networkId") int networkId,
-                                              @RequestParam(value = "domainName") String domainName) {
+    public String getRegistrantDomainsPage(@RequestParam(value = "networkId") int networkId,
+                                           @RequestParam(value = "domainName") String domainName) {
 
         return priceInfoService.GetRegisterPrice(networkId,
                                                  domainName);

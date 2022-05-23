@@ -15,10 +15,12 @@ public interface PriceInfoService {
                             int pageSize);
 
 
-    PriceInfo getRentYearsPrice(int networkId,
-                                String domainName,
-                                Integer years);
+    String getRentYearsPrice(int networkId,
+                             String domainName,
+                             Integer years);
 
-    PriceInfo GetRegisterPrice(int networkId,
-                               String domainName);
+    String GetRegisterPrice(int networkId,
+                            String domainName);
+
+    PriceInfo getPrice(int networkId);
 }

@@ -47,16 +47,39 @@ public class PriceInfoServiceImpl implements PriceInfoService {
 
 
     @Override
-    public PriceInfo getRentYearsPrice(int networkId,
-                                       String domainName,
-                                       Integer years) {
+    public String getRentYearsPrice(int networkId,
+                                    String domainName,
+                                    Integer years) {
         return null;
     }
 
     @Override
-    public PriceInfo GetRegisterPrice(int networkId,
-                                      String domainName) {
-        return null;
+    public String GetRegisterPrice(int networkId,
+                                   String domainName) {
+
+        if (domainName == null || domainName.length() == 0)
+            return null;
+
+        PriceInfo priceInfo = priceInfoRepository.getByNetworkId(networkId);
+
+        String price = priceInfo.getRegisterPrice();
+        if (price == null || price.length() == 0) return null;
+        if (price.charAt(0) != '[' || price.charAt(price.length() - 1) != ']') return null;
+        price = price.substring(1,
+                                price.length() - 1);
+
+        String[] priceArray = price.split(",");
+        if (priceArray.length == 0)
+            return null;
+
+        if (domainName.length() > priceArray.length)
+            return priceArray[priceArray.length - 1];
+        return priceArray[domainName.length() - 1];
+    }
+
+    @Override
+    public PriceInfo getPrice(int networkId) {
+        return priceInfoRepository.getByNetworkId(networkId);
     }
 
 }

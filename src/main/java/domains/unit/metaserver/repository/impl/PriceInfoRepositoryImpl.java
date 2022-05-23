@@ -135,6 +135,8 @@ public class PriceInfoRepositoryImpl implements PriceInfoRepository {
             priceInfo.setPkId(rs.getString("pk_id"));
             priceInfo.setNetworkId(rs.getInt("network_id"));
             priceInfo.setPaymentType(rs.getInt("payment_type"));
+            priceInfo.setRegisterPrice(rs.getString("register_price"));
+            priceInfo.setRentPrice(rs.getString("rent_price"));
             return priceInfo;
         }
     }
