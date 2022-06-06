@@ -14,4 +14,6 @@ public interface ReverseInfoRepository {
                               int pageNo,
                               int pageSize);
 
+    ReverseInfo getReverseInfoByAddress(int networkId,
+                                        String address);
 }

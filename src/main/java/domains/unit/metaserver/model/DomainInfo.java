@@ -13,8 +13,20 @@ public class DomainInfo {
     private String name;//name
     private int baseNodeIndex;//base_node_index
     private String owner;//owner
+
+    private String controller;//controller
+
+    private String resolver;//resolver
+
+    private String ethAddress;//eth_address
+
+    private String contentHash;//content_hash
+
+    private String record;//record
+
+
     private BigInteger expires;//expires
-    private int reverse;//reverse
+
     private Date opTime;//op_time
 
 
@@ -74,12 +86,44 @@ public class DomainInfo {
         this.expires = expires;
     }
 
-    public int getReverse() {
-        return reverse;
+    public String getController() {
+        return controller;
     }
 
-    public void setReverse(int reverse) {
-        this.reverse = reverse;
+    public void setController(String controller) {
+        this.controller = controller;
+    }
+
+    public String getResolver() {
+        return resolver;
+    }
+
+    public void setResolver(String resolver) {
+        this.resolver = resolver;
+    }
+
+    public String getEthAddress() {
+        return ethAddress;
+    }
+
+    public void setEthAddress(String ethAddress) {
+        this.ethAddress = ethAddress;
+    }
+
+    public String getContentHash() {
+        return contentHash;
+    }
+
+    public void setContentHash(String contentHash) {
+        this.contentHash = contentHash;
+    }
+
+    public String getRecord() {
+        return record;
+    }
+
+    public void setRecord(String record) {
+        this.record = record;
     }
 
     public Date getOpTime() {

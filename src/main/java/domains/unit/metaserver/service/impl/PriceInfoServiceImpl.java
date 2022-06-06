@@ -4,6 +4,7 @@ import domains.unit.metaserver.model.Page;
 import domains.unit.metaserver.model.PriceInfo;
 import domains.unit.metaserver.repository.PriceInfoRepository;
 import domains.unit.metaserver.service.PriceInfoService;
+import domains.unit.metaserver.utility.DomainName;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,23 +48,21 @@ public class PriceInfoServiceImpl implements PriceInfoService {
 
 
     @Override
-    public String getRentYearsPrice(int networkId,
-                                    String domainName,
-                                    Integer years) {
-        return null;
-    }
-
-    @Override
-    public String GetRegisterPrice(int networkId,
-                                   String domainName) {
-
+    public String getRentPrice(int networkId,
+                               String domainName) {
         if (domainName == null || domainName.length() == 0)
             return null;
 
-        PriceInfo priceInfo = priceInfoRepository.getByNetworkId(networkId);
 
-        String price = priceInfo.getRegisterPrice();
+        domainName = DomainName.getDomain(domainName);
+
+        PriceInfo priceInfo = priceInfoRepository.getByNetworkId(networkId);
+        if (priceInfo == null) return null;
+
+        String price = priceInfo.getRentPrice();
         if (price == null || price.length() == 0) return null;
+
+
         if (price.charAt(0) != '[' || price.charAt(price.length() - 1) != ']') return null;
         price = price.substring(1,
                                 price.length() - 1);
@@ -74,6 +73,40 @@ public class PriceInfoServiceImpl implements PriceInfoService {
 
         if (domainName.length() > priceArray.length)
             return priceArray[priceArray.length - 1];
+
+
+        return priceArray[domainName.length() - 1];
+    }
+
+    @Override
+    public String GetRegisterPrice(int networkId,
+                                   String domainName) {
+
+
+        if (domainName == null || domainName.length() == 0)
+            return null;
+
+        domainName = DomainName.getDomain(domainName);
+
+        PriceInfo priceInfo = priceInfoRepository.getByNetworkId(networkId);
+        if (priceInfo == null) return null;
+
+        String price = priceInfo.getRegisterPrice();
+        if (price == null || price.length() == 0) return null;
+
+
+        if (price.charAt(0) != '[' || price.charAt(price.length() - 1) != ']') return null;
+        price = price.substring(1,
+                                price.length() - 1);
+
+        String[] priceArray = price.split(",");
+        if (priceArray.length == 0)
+            return null;
+
+        if (domainName.length() > priceArray.length)
+            return priceArray[priceArray.length - 1];
+
+
         return priceArray[domainName.length() - 1];
     }
 

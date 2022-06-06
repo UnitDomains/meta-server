@@ -53,7 +53,7 @@ public class ReverseInfoRepositoryImpl implements ReverseInfoRepository {
         return jdbcTemplate.queryForObject("""
                                                    SELECT count(*) 
                                                    FROM reverse_info
-                                                   WHERE networkId=?
+                                                   WHERE network_id=?
                                                    """,
                                            new Object[]{networkId},
                                            new int[]{Types.INTEGER},
@@ -73,7 +73,7 @@ public class ReverseInfoRepositoryImpl implements ReverseInfoRepository {
         return jdbcTemplate.query("""
                                           SELECT * 
                                           FROM reverse_info
-                                          WHERE networkId=?
+                                          WHERE network_id=?
                                           limit ?,?
                                           """,
                                   new Object[]{networkId, pageNo * pageSize, pageSize},
@@ -104,6 +104,29 @@ public class ReverseInfoRepositoryImpl implements ReverseInfoRepository {
                           resultData);
     }
 
+    @Override
+    public ReverseInfo getReverseInfoByAddress(int networkId,
+                                               String address) {
+        if (jdbcTemplate.queryForObject("""
+                                                SELECT count(*) 
+                                                FROM reverse_info 
+                                                WHERE network_id=? AND addr=?
+                                                """,
+                                        new Object[]{networkId, address},
+                                        new int[]{Types.CHAR, Types.CHAR},
+                                        Integer.class) != 1)
+            return null;
+
+        return jdbcTemplate.queryForObject("""
+                                                   SELECT * 
+                                                   FROM reverse_info
+                                                   WHERE network_id=? AND addr=?
+                                                   """,
+                                           new Object[]{networkId, address},
+                                           new int[]{Types.CHAR, Types.CHAR},
+                                           new ReverseInfoMapper());
+    }
+
     /**
      * RowMapper
      */
@@ -116,6 +139,7 @@ public class ReverseInfoRepositoryImpl implements ReverseInfoRepository {
             reverseInfo.setNetworkId(rs.getInt("network_id"));
             reverseInfo.setAddr(rs.getString("addr"));
             reverseInfo.setNode(rs.getString("node"));
+            reverseInfo.setName(rs.getString("name"));
             reverseInfo.setOpTime(rs.getDate("op_time"));
             return reverseInfo;
         }

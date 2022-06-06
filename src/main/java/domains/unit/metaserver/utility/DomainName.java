@@ -1,9 +1,9 @@
 package domains.unit.metaserver.utility;
 
 public class DomainName {
-    static final public String[] DOMAIN_NAMES =
-            "about,area,beyond,book,cat,cell,dream,dog,east,enjoy,enter,everything,earth,focus,foot,friend,girl,go,good,boy,happy,high,hour,home,here,image,item,keep,key,local,lucky,main,meta,moon,nature,nice,north,verse,option,owner,person,player,point,position,power,rain,record,region,right,room,sea,side,spring,station,street,south,time,ten,unit,wind,yeah,west,well,world".split(",");
-    //private static final String[] DOMAIN_NAMES = "cat,dog,unit".split(",");
+    //static final public String[] DOMAIN_NAMES =
+    //        "about,area,beyond,book,cat,cell,dream,dog,east,enjoy,enter,everything,earth,focus,foot,friend,girl,go,good,boy,happy,high,hour,home,here,image,item,keep,key,local,lucky,main,meta,moon,nature,nice,north,verse,option,owner,person,player,point,position,power,rain,record,region,right,room,sea,side,spring,station,street,south,time,ten,unit,wind,yeah,west,well,world".split(",");
+    public static final String[] DOMAIN_NAMES = "cat,unit".split(",");
 
     public static boolean validateDomainSuffix(String suffix) {
         for (String v : DOMAIN_NAMES

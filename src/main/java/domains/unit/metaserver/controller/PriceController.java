@@ -26,21 +26,11 @@ public class PriceController {
     public String getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
                                            @RequestParam(value = "domainName") String domainName) {
 
-        return priceInfoService.getRentYearsPrice(networkId,
-                                                  domainName,
-                                                  1);
+        return priceInfoService.getRentPrice(networkId,
+                                             domainName
+                                            );
     }
 
-
-    @GetMapping("rentyears")
-    public String getControllerDomainsPage(@RequestParam(value = "networkId") int networkId,
-                                           @RequestParam(value = "domainName") String domainName,
-                                           @RequestParam(value = "years") Integer years) {
-
-        return priceInfoService.getRentYearsPrice(networkId,
-                                                  domainName,
-                                                  years);
-    }
 
     @GetMapping("register")
     public String getRegistrantDomainsPage(@RequestParam(value = "networkId") int networkId,

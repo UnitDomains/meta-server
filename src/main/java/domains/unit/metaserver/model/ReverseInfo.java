@@ -10,6 +10,8 @@ public class ReverseInfo {
     private int networkId;//network_id
     private String addr;//addr
     private String node;//node
+
+    private String name;//name
     private Date opTime;//op_time
 
 
@@ -43,6 +45,14 @@ public class ReverseInfo {
 
     public void setNode(String node) {
         this.node = node;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getOpTime() {

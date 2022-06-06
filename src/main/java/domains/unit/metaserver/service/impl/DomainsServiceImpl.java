@@ -33,46 +33,47 @@ public class DomainsServiceImpl implements DomainsService {
 
 
     @Override
-    public Page<OwnerDomainName> getRegistrantDomainsPage(int networkId,
-                                                          String address,
-                                                          int pageNo,
-                                                          int pageSize) {
-        return ownerDomainNameRepository.getRegistrantDomainsPage(networkId,
-                                                                  address,
-                                                                  pageNo,
-                                                                  pageSize);
+    public Page<DomainInfo> getRegistrantDomainsPage(int networkId,
+                                                     String address,
+                                                     int pageNo,
+                                                     int pageSize) {
+        return domainInfoRepository.getRegistrantDomainsPage(networkId,
+                                                             address,
+                                                             pageNo,
+                                                             pageSize);
 
 
     }
 
     @Override
-    public Page<OwnerDomainName> getControllerDomainsPage(int networkId,
-                                                          String address,
-                                                          int pageNo,
-                                                          int pageSize) {
+    public Page<DomainInfo> getControllerDomainsPage(int networkId,
+                                                     String address,
+                                                     int pageNo,
+                                                     int pageSize) {
 
-        return ownerDomainNameRepository.getControllerDomainsPage(networkId,
-                                                                  address,
-                                                                  pageNo,
-                                                                  pageSize);
+        return domainInfoRepository.getControllerDomainsPage(networkId,
+                                                             address,
+                                                             pageNo,
+                                                             pageSize);
     }
 
     @Override
-    public List<OwnerDomainName> getReverseRecordDomains(int networkId,
-                                                         String address) {
-        List<OwnerDomainName> list1 = ownerDomainNameRepository.getReverseRecordDomains(networkId,
-                                                                                        address);
+    public List<DomainInfo> getReverseRecordDomains(int networkId,
+                                                    String address) {
+        List<DomainInfo> list1 = domainInfoRepository.getListByEthAddress(networkId,
+                                                                          address);
+
 
         List<SubdomainInfo> subdomainInfoList =
                 subdomainInfoRepository.getListByOwner(networkId,
                                                        address);
 
         if (subdomainInfoList != null && subdomainInfoList.size() > 0) {
-            List<OwnerDomainName> list2 = new ArrayList<>();
+            List<DomainInfo> list2 = new ArrayList<>();
             for (SubdomainInfo subdomainInfo : subdomainInfoList) {
 
                 if (subdomainInfo != null) {
-                    OwnerDomainName ownerDomainName = new OwnerDomainName();
+                    DomainInfo domainInfo = new DomainInfo();
 
 
                     OwnSubDomainName resultOwnSubDomainName = new OwnSubDomainName();
@@ -82,11 +83,11 @@ public class DomainsServiceImpl implements DomainsService {
 
                     if (subname != null) {
 
-                        ownerDomainName.setName(subname.getName());
-                        ownerDomainName.setBaseNodeIndex(subname.getBaseNodeIndex());
+                        domainInfo.setName(subname.getName());
+                        domainInfo.setBaseNodeIndex(subname.getBaseNodeIndex());
                     }
 
-                    list2.add(ownerDomainName);
+                    list2.add(domainInfo);
                 }
 
             }
@@ -153,20 +154,20 @@ public class DomainsServiceImpl implements DomainsService {
 
 
         if (parent == null) {
-            OwnerDomainName ownerDomainName =
-                    ownerDomainNameRepository.getOwnerDomainNameByLabel(
+            DomainInfo domainInfo =
+                    domainInfoRepository.getByLabel(
                             networkId,
                             subdomainInfo.getLabel());
 
 
-            if (ownerDomainName != null) {
+            if (domainInfo != null) {
                 if (resultOwnSubDomainName.getName() != null)
                     resultOwnSubDomainName.setName(resultOwnSubDomainName.getName()
                                                            + "." + subdomainInfo.getSubDomain()
-                                                           + "." + ownerDomainName.getName());
+                                                           + "." + domainInfo.getName());
                 else
-                    resultOwnSubDomainName.setName(subdomainInfo.getSubDomain() + "." + ownerDomainName.getName());
-                resultOwnSubDomainName.setBaseNodeIndex(ownerDomainName.getBaseNodeIndex());
+                    resultOwnSubDomainName.setName(subdomainInfo.getSubDomain() + "." + domainInfo.getName());
+                resultOwnSubDomainName.setBaseNodeIndex(domainInfo.getBaseNodeIndex());
                 return resultOwnSubDomainName;
             }
             return null;
@@ -264,6 +265,30 @@ public class DomainsServiceImpl implements DomainsService {
         }
 
         return suggestResultList;
+    }
+
+    @Override
+    public DomainInfo getDomain(int networkId,
+                                String domainName) {
+        String domain = DomainName.getDomain(domainName);
+        int baseNodeIndex = DomainName.getBaseNodeIndex(domainName);
+        return domainInfoRepository.getDomain(networkId,
+                                              domain,
+                                              baseNodeIndex);
+    }
+
+    @Override
+    public SubdomainInfo getSubdomainInfo(int networkId,
+                                          String subDomain,
+                                          String subNodeLabel,
+                                          String node) {
+
+        if (subDomain == null || subDomain.length() == 0)
+            return null;
+
+
+        return subdomainInfoRepository.getBySubNodeLabel(networkId,
+                                                         subNodeLabel);
     }
 
     private boolean hasRegister(String str,

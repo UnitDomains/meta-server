@@ -1,7 +1,6 @@
 package domains.unit.metaserver.service;
 
 import domains.unit.metaserver.model.Page;
-import domains.unit.metaserver.model.PriceInfo;
 import domains.unit.metaserver.model.ReverseInfo;
 
 public interface ReverseInfoService {
@@ -15,6 +14,9 @@ public interface ReverseInfoService {
                               int pageNo,
                               int pageSize);
 
-    PriceInfo getReverseInfo(int networkId,
-                             String domainName);
+    ReverseInfo getReverseInfo(int networkId,
+                               String domainName);
+
+    ReverseInfo getReverseRecord(int networkId,
+                                 String address);
 }

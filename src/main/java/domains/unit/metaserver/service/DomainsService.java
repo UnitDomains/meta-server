@@ -6,18 +6,18 @@ import java.util.List;
 
 public interface DomainsService {
 
-    Page<OwnerDomainName> getRegistrantDomainsPage(int networkId,
-                                                   String address,
-                                                   int pageNo,
-                                                   int pageSize);
+    Page<DomainInfo> getRegistrantDomainsPage(int networkId,
+                                              String address,
+                                              int pageNo,
+                                              int pageSize);
 
-    Page<OwnerDomainName> getControllerDomainsPage(int networkId,
-                                                   String address,
-                                                   int pageNo,
-                                                   int pageSize);
+    Page<DomainInfo> getControllerDomainsPage(int networkId,
+                                              String address,
+                                              int pageNo,
+                                              int pageSize);
 
-    List<OwnerDomainName> getReverseRecordDomains(int networkId,
-                                                  String address);
+    List<DomainInfo> getReverseRecordDomains(int networkId,
+                                             String address);
 
     Page<OwnSubDomainName> getSubdomainsPage(int networkId,
                                              String label,
@@ -32,4 +32,12 @@ public interface DomainsService {
 
     List<SuggestResult> getSuggestResultsOfDomains(int networkId,
                                                    String searchText);
+
+    DomainInfo getDomain(int networkId,
+                         String domainName);
+
+    SubdomainInfo getSubdomainInfo(int networkId,
+                                   String subDomain,
+                                   String subNodeLabel,
+                                   String node);
 }

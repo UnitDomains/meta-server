@@ -27,7 +27,7 @@ public class OwnerDomainNameRepositoryImpl implements OwnerDomainNameRepository 
                                                    SELECT count(*)
                                                    FROM base_registrar_event_transfer AS A 
                                                    JOIN  eth_registrar_controller_event_name_registered AS B
-                                                   ON A.tokenId=B.label
+                                                   ON A.token_id=B.label
                                                    WHERE A.network_id=? AND B.network_id=? AND A.to_addr=?
                                                    """,
                                            new Object[]{networkId, networkId, address},
@@ -43,7 +43,7 @@ public class OwnerDomainNameRepositoryImpl implements OwnerDomainNameRepository 
                                           SELECT B.name,B.label,B.base_node_index,B.network_id
                                           FROM base_registrar_event_transfer AS A 
                                           JOIN eth_registrar_controller_event_name_registered AS B
-                                          ON A.tokenId=B.label
+                                          ON A.token_id=B.label
                                           WHERE A.network_id=? AND B.network_id=? AND A.to_addr=?
                                           limit ?,?
                                           """,
@@ -146,7 +146,7 @@ public class OwnerDomainNameRepositoryImpl implements OwnerDomainNameRepository 
 
         if (jdbcTemplate.queryForObject("""
                                                 SELECT COUNT(*) 
-                                                FROM eth_registrar_controller_event_name_registered 
+                                                FROM domain_info 
                                                 WHERE network_id=? AND label=?
                                                 """,
                                         new Object[]{networkId, label},
@@ -156,7 +156,7 @@ public class OwnerDomainNameRepositoryImpl implements OwnerDomainNameRepository 
 
         return jdbcTemplate.queryForObject("""
                                                    SELECT name,label,base_node_index,network_id 
-                                                   FROM eth_registrar_controller_event_name_registered 
+                                                   FROM domain_info 
                                                    WHERE network_id=? AND label=?
                                                    """,
                                            new Object[]{networkId, label},

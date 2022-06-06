@@ -1,7 +1,6 @@
 package domains.unit.metaserver.service.impl;
 
 import domains.unit.metaserver.model.Page;
-import domains.unit.metaserver.model.PriceInfo;
 import domains.unit.metaserver.model.ReverseInfo;
 import domains.unit.metaserver.repository.ReverseInfoRepository;
 import domains.unit.metaserver.service.ReverseInfoService;
@@ -47,9 +46,16 @@ public class ReverseInfoServiceImpl implements ReverseInfoService {
     }
 
     @Override
-    public PriceInfo getReverseInfo(int networkId,
-                                    String domainName) {
+    public ReverseInfo getReverseInfo(int networkId,
+                                      String domainName) {
         return null;
+    }
+
+    @Override
+    public ReverseInfo getReverseRecord(int networkId,
+                                        String address) {
+        return reverseInfoRepository.getReverseInfoByAddress(networkId,
+                                                             address);
     }
 
 }

@@ -15,9 +15,8 @@ public interface PriceInfoService {
                             int pageSize);
 
 
-    String getRentYearsPrice(int networkId,
-                             String domainName,
-                             Integer years);
+    String getRentPrice(int networkId,
+                        String domainName);
 
     String GetRegisterPrice(int networkId,
                             String domainName);

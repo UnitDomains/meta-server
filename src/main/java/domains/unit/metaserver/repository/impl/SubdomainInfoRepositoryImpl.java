@@ -115,6 +115,13 @@ public class SubdomainInfoRepositoryImpl implements SubdomainInfoRepository {
             subdomainInfo.setNetworkId(rs.getInt("network_id"));
             subdomainInfo.setLabel(rs.getString("label"));
             subdomainInfo.setSubNodeLabel(rs.getString("sub_node_label"));
+            subdomainInfo.setSubDomain(rs.getString("sub_domain"));
+            subdomainInfo.setOwner(rs.getString("owner"));
+            subdomainInfo.setController(rs.getString("controller"));
+            subdomainInfo.setResolver(rs.getString("resolver"));
+            subdomainInfo.setEthAddress(rs.getString("eth_address"));
+            subdomainInfo.setContentHash(rs.getString("content_hash"));
+            subdomainInfo.setRecord(rs.getString("record"));
             subdomainInfo.setOpTime(rs.getDate("op_time"));
             return subdomainInfo;
         }

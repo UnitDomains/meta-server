@@ -197,7 +197,7 @@ public class MetadataServiceImpl implements MetadataService {
             case 3:
                 return "";
             case 4:
-                return "0x91f4859da91F5935d5A7694202e218661c824A53";
+                return "0xE77508ED0a40559717563d6E0DFc74C067AB30c1";
         }
         return null;
     }
