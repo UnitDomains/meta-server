@@ -36,6 +36,9 @@ public interface DomainsService {
     DomainInfo getDomain(int networkId,
                          String domainName);
 
+    DomainInfo getDomainByTokenId(int networkId,
+                                  String tokenId);
+
     SubdomainInfo getSubdomainInfo(int networkId,
                                    String subDomain,
                                    String subNodeLabel,

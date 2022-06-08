@@ -1,11 +1,9 @@
 package domains.unit.metaserver.service.impl;
 
-import domains.unit.metaserver.model.BaseRegistrarEventNameRegistered;
-import domains.unit.metaserver.model.OwnerDomainName;
+import domains.unit.metaserver.model.DomainInfo;
 import domains.unit.metaserver.model.metadata.MetaData;
 import domains.unit.metaserver.model.metadata.MetaDataAttribute;
-import domains.unit.metaserver.repository.BaseRegistrarEventNameRegisteredRepository;
-import domains.unit.metaserver.repository.OwnerDomainNameRepository;
+import domains.unit.metaserver.service.DomainsService;
 import domains.unit.metaserver.service.MetadataService;
 import domains.unit.metaserver.utility.DomainName;
 import domains.unit.metaserver.utility.ResponseEntityUtils;
@@ -99,19 +97,18 @@ public class MetadataServiceImpl implements MetadataService {
             """;
 
 
-    OwnerDomainNameRepository ownerDomainNameRepository;
-    BaseRegistrarEventNameRegisteredRepository baseRegistrarEventNameRegisteredRepository;
+    DomainsService domainsService;
 
-    public MetadataServiceImpl(OwnerDomainNameRepository ownerDomainNameRepository,
-                               BaseRegistrarEventNameRegisteredRepository baseRegistrarEventNameRegisteredRepository) {
-        this.ownerDomainNameRepository = ownerDomainNameRepository;
-        this.baseRegistrarEventNameRegisteredRepository = baseRegistrarEventNameRegisteredRepository;
+    public MetadataServiceImpl(
+            DomainsService domainsService) {
+
+        this.domainsService = domainsService;
     }
 
     private String getImage(String name,
                             String tokenId) {
 
-        System.out.println(tokenId);
+
         if (tokenId.length() == 66)
             tokenId = tokenId.substring(2);
 
@@ -207,6 +204,8 @@ public class MetadataServiceImpl implements MetadataService {
                                                 String contractAddress,
                                                 String tokenId) {
 
+        System.out.println(tokenId);
+
 
         if (networkName == null || contractAddress == null || tokenId == null ||
                 networkName.length() == 0 || contractAddress.length() == 0 || tokenId.length() == 0)
@@ -225,67 +224,61 @@ public class MetadataServiceImpl implements MetadataService {
                                                   "error contract address");
 
 
-        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId,
-                                                                                              tokenId);
+        DomainInfo domainInfo = domainsService.getDomainByTokenId(networkId,
+                                                                  tokenId);
 
-        if (ownerDomainName == null)
+        if (domainInfo == null)
             return ResponseEntityUtils.badRequest(null,
                                                   "error value of tokenId");
 
-        if (ownerDomainName.getBaseNodeIndex() >= DomainName.DOMAIN_NAMES.length)
+        if (domainInfo.getBaseNodeIndex() >= DomainName.DOMAIN_NAMES.length)
             return ResponseEntityUtils.internalServerError(null,
                                                            "error value of base node index");
 
         MetaData metaData = new MetaData();
         String domainName =
-                ownerDomainName.getName() + "." + DomainName.DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()];
+                domainInfo.getName() + "." + DomainName.DOMAIN_NAMES[domainInfo.getBaseNodeIndex()];
         metaData.setName(domainName);
 
         metaData.setImage("https://metadata.unit.domains/" + networkName + "/" + contractAddress + "/" + tokenId + "/image");
 
         metaData.setImage_url("https://metadata.unit.domains/" + networkName + "/" + contractAddress + "/" + tokenId + "/image");
 
-        String str = getImage(ownerDomainName.getName() +
+        String str = getImage(domainInfo.getName() +
                                       "." +
-                                      DomainName.DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()],
+                                      DomainName.DOMAIN_NAMES[domainInfo.getBaseNodeIndex()],
                               tokenId);
 
         metaData.setImage_data(str);
 
         metaData.setDescription(domainName + ",A distributed, open, and extensible naming system based on the Ethereum blockchain.");
-        metaData.setName_length(ownerDomainName.getName().length());
+        metaData.setName_length(domainInfo.getName().length());
         metaData.setUrl("https://www.unit.domains/name/" + domainName);
 
 
         List<MetaDataAttribute> metaDataAttributeList = new ArrayList<>();
 
-        BaseRegistrarEventNameRegistered baseRegistrarEventNameRegistered =
-                baseRegistrarEventNameRegisteredRepository.getById(networkId,
-                                                                   tokenId);
 
+        MetaDataAttribute metaDataAttributeExpiration = new MetaDataAttribute();
+        metaDataAttributeExpiration.setTrait_type("Expiration Date");
+        metaDataAttributeExpiration.setDisplay_type("date");
+        metaDataAttributeExpiration.setValue(domainInfo.getExpires());
+        metaDataAttributeList.add(metaDataAttributeExpiration);
 
-        if (baseRegistrarEventNameRegistered != null) {
-            MetaDataAttribute metaDataAttributeExpiration = new MetaDataAttribute();
-            metaDataAttributeExpiration.setTrait_type("Expiration Date");
-            metaDataAttributeExpiration.setDisplay_type("date");
-            metaDataAttributeExpiration.setValue(baseRegistrarEventNameRegistered.getExpires());
-            metaDataAttributeList.add(metaDataAttributeExpiration);
+        MetaDataAttribute metaDataAttributeRegistration = new MetaDataAttribute();
+        metaDataAttributeRegistration.setTrait_type("Registration Date");
+        metaDataAttributeRegistration.setDisplay_type("date");
+        if (domainInfo.getTimestamp() != null)
+            metaDataAttributeRegistration.setValue(BigInteger.valueOf(domainInfo.getTimestamp()
+                                                                                .getTime()));
+        metaDataAttributeList.add(metaDataAttributeRegistration);
 
-            MetaDataAttribute metaDataAttributeRegistration = new MetaDataAttribute();
-            metaDataAttributeRegistration.setTrait_type("Registration Date");
-            metaDataAttributeRegistration.setDisplay_type("date");
-            metaDataAttributeRegistration.setValue(BigInteger.valueOf(baseRegistrarEventNameRegistered.getTimestamp()
-                                                                                                      .getTime()));
-            metaDataAttributeList.add(metaDataAttributeRegistration);
+        MetaDataAttribute metaDataAttributeCreated = new MetaDataAttribute();
+        metaDataAttributeCreated.setTrait_type("Created Date");
+        metaDataAttributeCreated.setDisplay_type("date");
+        metaDataAttributeCreated.setValue(null);
+        metaDataAttributeList.add(metaDataAttributeCreated);
 
-            MetaDataAttribute metaDataAttributeCreated = new MetaDataAttribute();
-            metaDataAttributeCreated.setTrait_type("Created Date");
-            metaDataAttributeCreated.setDisplay_type("date");
-            metaDataAttributeCreated.setValue(null);
-            metaDataAttributeList.add(metaDataAttributeCreated);
-
-
-        }
 
         if (metaDataAttributeList.size() > 0)
             metaData.setAttributes(metaDataAttributeList);
@@ -316,20 +309,20 @@ public class MetadataServiceImpl implements MetadataService {
             return ResponseEntityUtils.badRequest(null,
                                                   "error contract address");
 
-        OwnerDomainName ownerDomainName = ownerDomainNameRepository.getOwnerDomainNameByLabel(networkId,
-                                                                                              tokenId);
+        DomainInfo domainInfo = domainsService.getDomainByTokenId(networkId,
+                                                                  tokenId);
 
-        if (ownerDomainName == null)
+        if (domainInfo == null)
             return ResponseEntityUtils.badRequest(null,
                                                   "error value of tokenId");
 
-        if (ownerDomainName.getBaseNodeIndex() >= DomainName.DOMAIN_NAMES.length)
+        if (domainInfo.getBaseNodeIndex() >= DomainName.DOMAIN_NAMES.length)
             return ResponseEntityUtils.internalServerError(null,
                                                            "error value of base node index");
 
-        String str = getImage(ownerDomainName.getName() +
+        String str = getImage(domainInfo.getName() +
                                       "." +
-                                      DomainName.DOMAIN_NAMES[ownerDomainName.getBaseNodeIndex()],
+                                      DomainName.DOMAIN_NAMES[domainInfo.getBaseNodeIndex()],
                               tokenId);
 
         return ResponseEntity.ok(str);

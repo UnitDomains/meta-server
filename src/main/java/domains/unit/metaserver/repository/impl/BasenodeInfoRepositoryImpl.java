@@ -54,7 +54,7 @@ public class BasenodeInfoRepositoryImpl implements BasenodeInfoRepository {
         return jdbcTemplate.queryForObject("""
                                                    SELECT count(*) 
                                                    FROM basenode_info
-                                                   WHERE networkId=?
+                                                   WHERE network_id=?
                                                    """,
                                            new Object[]{networkId},
                                            new int[]{Types.INTEGER},
@@ -74,7 +74,7 @@ public class BasenodeInfoRepositoryImpl implements BasenodeInfoRepository {
         return jdbcTemplate.query("""
                                           SELECT * 
                                           FROM basenode_info
-                                          WHERE networkId=?
+                                          WHERE network_id=?
                                           limit ?,?
                                           """,
                                   new Object[]{networkId, pageNo * pageSize, pageSize},

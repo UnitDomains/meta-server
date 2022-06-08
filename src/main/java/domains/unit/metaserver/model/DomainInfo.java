@@ -27,6 +27,8 @@ public class DomainInfo {
 
     private BigInteger expires;//expires
 
+    private Date timestamp;//timestamp
+
     private Date opTime;//op_time
 
 
@@ -124,6 +126,14 @@ public class DomainInfo {
 
     public void setRecord(String record) {
         this.record = record;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Date getOpTime() {

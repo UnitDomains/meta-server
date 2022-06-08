@@ -298,7 +298,7 @@ public class DomainInfoRepositoryImpl implements DomainInfoRepository {
             domainInfo.setContentHash(rs.getString("content_hash"));
             domainInfo.setRecord(rs.getString("record"));
             domainInfo.setExpires(BigInteger.valueOf(rs.getLong("expires")));
-
+            domainInfo.setTimestamp(rs.getDate("timestamp"));
             domainInfo.setOpTime(rs.getDate("op_time"));
             return domainInfo;
         }

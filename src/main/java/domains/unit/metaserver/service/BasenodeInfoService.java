@@ -7,10 +7,11 @@ public interface BasenodeInfoService {
 
     int getCount(int networkId);
 
+
     BasenodeInfo getByPkId(String pkId);
+
 
     Page<BasenodeInfo> getPage(int networkId,
                                int pageNo,
                                int pageSize);
-
 }
