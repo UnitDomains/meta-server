@@ -16,6 +16,7 @@ public class CorsConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.addAllowedOrigin("https://www.unit.domains");
+        corsConfiguration.addAllowedOrigin("https://unit.domains");
         corsConfiguration.addAllowedOrigin("http://127.0.0.1:8000");
 
 
@@ -31,7 +32,8 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", CorsConfig.buildConfig());
+        source.registerCorsConfiguration("/**",
+                                         CorsConfig.buildConfig());
         return new CorsFilter(source);
     }
 

@@ -173,28 +173,30 @@ public class MetadataServiceImpl implements MetadataService {
 
 
     private int getNetworkId(String networkName) {
-        switch (networkName) {
+
+        switch (networkName.toLowerCase()) {
             case "mainnet":
-            case "Mainnet":
                 return 1;
             case "ropsten":
-            case "Ropsten":
                 return 3;
             case "rinkeby":
-            case "Rinkeby":
                 return 4;
+            case "goerli":
+                return 5;
         }
         return 0;
     }
 
     private String getContractAddress(int networkId) {
         switch (networkId) {
-            case 1:
-                return "";
-            case 3:
-                return "";
-            case 4:
-                return "0xE77508ED0a40559717563d6E0DFc74C067AB30c1";
+            case 1://mainnet
+                return "0xED6342fc8beD919AE35BA5F6E2aeD3932EeB04E3";
+            case 3://ropsten
+                return "0xED6342fc8beD919AE35BA5F6E2aeD3932EeB04E3";
+            case 4://rinkeby
+                return "0xED6342fc8beD919AE35BA5F6E2aeD3932EeB04E3";
+            case 5://goerli network
+                return "0xED6342fc8beD919AE35BA5F6E2aeD3932EeB04E3";
         }
         return null;
     }
