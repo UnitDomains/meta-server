@@ -43,4 +43,9 @@ public interface DomainsService {
                                    String subDomain,
                                    String subNodeLabel,
                                    String node);
+
+
+    int getDomainOwnersCount(int networkId);
+
+    int getDomainNamesCount(int networkId);
 }

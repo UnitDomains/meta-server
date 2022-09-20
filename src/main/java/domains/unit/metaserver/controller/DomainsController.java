@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DomainsController {
     private final DomainsService domainsService;
 
+
     public DomainsController(DomainsService domainsService) {
         this.domainsService = domainsService;
     }
@@ -72,7 +73,7 @@ public class DomainsController {
                                           @RequestParam(value = "subDomain") String subDomain,
                                           @RequestParam(value = "subNodeLabel") String subNodeLabel,
                                           @RequestParam(value = "node") String node) {
-       
+
 
         return domainsService.getSubdomainInfo(networkId,
                                                subDomain,
@@ -80,5 +81,18 @@ public class DomainsController {
                                                node);
     }
 
+    @GetMapping("domainnamescount")
+    public int getDomainNamesCount(@RequestParam(value = "networkId") int networkId) {
+
+
+        return domainsService.getDomainNamesCount(networkId);
+    }
+
+    @GetMapping("domainownerscount")
+    public int getDomainOwnersCount(@RequestParam(value = "networkId") int networkId) {
+
+
+        return domainsService.getDomainOwnersCount(networkId);
+    }
 
 }

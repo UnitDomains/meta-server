@@ -3,6 +3,7 @@ package domains.unit.metaserver.service.impl;
 import domains.unit.metaserver.model.*;
 import domains.unit.metaserver.repository.DomainInfoRepository;
 import domains.unit.metaserver.repository.SubdomainInfoRepository;
+import domains.unit.metaserver.service.BaseRegistrarEventNameRegisteredService;
 import domains.unit.metaserver.service.DomainsService;
 import domains.unit.metaserver.utility.DomainName;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,17 @@ public class DomainsServiceImpl implements DomainsService {
 
     private final DomainInfoRepository domainInfoRepository;
     SubdomainInfoRepository subdomainInfoRepository;
-    
+
+    BaseRegistrarEventNameRegisteredService baseRegistrarEventNameRegisteredService;
+
+
     public DomainsServiceImpl(
             SubdomainInfoRepository subdomainInfoRepository,
-            DomainInfoRepository domainInfoRepository) {
+            DomainInfoRepository domainInfoRepository,
+            BaseRegistrarEventNameRegisteredService baseRegistrarEventNameRegisteredService) {
         this.subdomainInfoRepository = subdomainInfoRepository;
         this.domainInfoRepository = domainInfoRepository;
+        this.baseRegistrarEventNameRegisteredService = baseRegistrarEventNameRegisteredService;
     }
 
 
@@ -274,6 +280,17 @@ public class DomainsServiceImpl implements DomainsService {
         return subdomainInfoRepository.getBySubNodeLabel(networkId,
                                                          subNodeLabel);
     }
+
+    @Override
+    public int getDomainOwnersCount(int networkId) {
+        return baseRegistrarEventNameRegisteredService.getOwnersCount(networkId);
+    }
+
+    @Override
+    public int getDomainNamesCount(int networkId) {
+        return baseRegistrarEventNameRegisteredService.getDomainNamesCount(networkId);
+    }
+
 
     private boolean hasRegister(String str,
                                 List<DomainInfo> domainInfoList) {
